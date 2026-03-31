@@ -1,0 +1,1075 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>성경지리로 보는 사도행전 | BIBLELAND™</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+  <script>
+    // 렌더링 전 디바이스 감지 (레이아웃 깜빡임 방지)
+    (function(){
+      var ua = navigator.userAgent;
+      var isIPad = ua.indexOf('iPad') > -1 || (ua.indexOf('Macintosh') > -1 && navigator.maxTouchPoints > 1);
+      var isMobile = window.innerWidth < 768 && !isIPad;
+      document.documentElement.className = isMobile ? 'is-mobile' : 'is-desktop';
+    })();
+  </script>
+  <style>
+    :root {
+      --vh: 1vh;
+      --sab: 0px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif; background: #1a1a2e; color: #eee; }
+
+    #header {
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+      padding: 14px 24px;
+      border-bottom: 2px solid #e94560;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    #header h1 { font-size: 1.3em; color: #fff; letter-spacing: 1px; }
+    #header p { font-size: 0.78em; color: #aaa; margin-top: 3px; }
+    #brand { font-size: 0.75em; color: #e94560; font-weight: bold; letter-spacing: 2px; }
+
+    .is-desktop #main { display: flex; height: calc(100vh - 68px); }
+    .is-desktop #map { flex: 1; }
+    .is-desktop #sidebar {
+      width: 310px; background: #16213e; overflow-y: auto;
+      border-left: 2px solid #0f3460; display: flex; flex-direction: column;
+    }
+    .is-desktop #bottomSheet { display: none; }
+
+    .is-mobile #main { display: flex; height: calc(100dvh - 48px); position: relative; }
+    .is-mobile #map { flex: 1; width: 100%; }
+    .is-mobile #sidebar { display: none; }
+    .is-mobile #bottomSheet {
+      position: fixed; left: 0; right: 0; bottom: 0;
+      width: 100%; height: 85dvh; background: #16213e;
+      border-radius: 16px 16px 0 0;
+      border-top: 2px solid #e94560;
+      box-shadow: 0 -4px 24px rgba(0,0,0,0.6);
+      z-index: 1000;
+      transform: translateY(calc(100% - 56px - env(safe-area-inset-bottom)));
+      transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+      display: flex; flex-direction: column;
+      padding-bottom: env(safe-area-inset-bottom);
+      overflow-y: auto;
+    }
+    .is-mobile #bottomSheet.mid { transform: translateY(calc(100% - 45dvh - env(safe-area-inset-bottom))); }
+    .is-mobile #bottomSheet.full { transform: translateY(0); }
+
+    /* ── 경로/지명 모드 전환 버튼 ── */
+    .mode-switch {
+      display: flex; gap: 6px; margin-bottom: 10px;
+    }
+    .mode-btn {
+      flex: 1; padding: 10px 6px; border-radius: 8px;
+      border: 2px solid #0f3460; background: #1a2a4a;
+      color: #888; font-size: 0.88em; font-weight: bold;
+      cursor: pointer; transition: all 0.25s;
+      font-family: 'Malgun Gothic', sans-serif;
+      letter-spacing: 0.5px; text-align: center;
+    }
+    .mode-btn.active {
+      background: #e94560; color: #fff; border-color: #e94560;
+      box-shadow: 0 0 12px rgba(233,69,96,0.4);
+    }
+    .mode-btn:hover:not(.active) {
+      background: #1e3a6a; color: #fff; border-color: #4dd0e1;
+    }
+    .mode-icon { font-size: 1.1em; margin-right: 4px; }
+    .mode-hint {
+      font-size: 0.7em; color: #666; margin: 0 0 10px 0;
+      padding: 6px 8px; background: rgba(255,255,255,0.03);
+      border-radius: 4px; line-height: 1.4; border-left: 3px solid #e94560;
+    }
+
+    .panel { padding: 14px 16px; border-bottom: 1px solid #0f3460; }
+    .panel h2 { font-size: 0.88em; color: #e94560; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 1px; }
+
+    .route-item {
+      display: flex; align-items: flex-start; gap: 8px;
+      padding: 7px 8px; margin: 2px 0; border-radius: 6px; cursor: pointer;
+      transition: background 0.2s;
+    }
+    .route-item:hover { background: rgba(255,255,255,0.05); }
+    .route-color { width: 13px; height: 13px; border-radius: 50%; flex-shrink: 0; margin-top: 3px; border: 2px solid rgba(255,255,255,0.3); }
+    .route-info { flex: 1; }
+    .route-name { font-size: 0.85em; font-weight: bold; color: #fff; }
+    .route-desc { font-size: 0.72em; color: #888; margin-top: 2px; line-height: 1.4; }
+    .route-toggle {
+      width: 34px; height: 18px; border-radius: 9px; background: #333; position: relative;
+      cursor: pointer; flex-shrink: 0; border: none; outline: none; transition: background 0.3s;
+    }
+    .route-toggle.on { background: #e94560; }
+    .route-toggle::after {
+      content: ''; position: absolute; width: 12px; height: 12px;
+      border-radius: 50%; background: #fff; top: 3px; left: 3px; transition: left 0.3s;
+    }
+    .route-toggle.on::after { left: 19px; }
+
+    #routePanel { transition: all 0.3s; }
+
+    .info-box { background: rgba(255,255,255,0.05); border-radius: 8px; padding: 10px; margin-top: 6px; font-size: 0.77em; color: #ccc; line-height: 1.6; }
+    .companion-item { font-size: 0.76em; color: #aaa; padding: 3px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
+    .companion-item:last-child { border-bottom: none; }
+    .companion-name { color: #4dd0e1; font-weight: bold; }
+    .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; margin-top: 7px; }
+    .stat-item { background: rgba(255,255,255,0.05); border-radius: 6px; padding: 7px; text-align: center; }
+    .stat-num { font-size: 1.3em; font-weight: bold; color: #e94560; }
+    .stat-label { font-size: 0.68em; color: #888; margin-top: 2px; }
+    .legend-note { font-size: 0.71em; color: #666; margin-top: 7px; line-height: 1.55; }
+
+    /* ── 아코디언 (모바일 동행자/안내) ── */
+    .accordion-header {
+      display: flex; align-items: center; justify-content: space-between;
+      cursor: pointer; min-height: 44px; padding: 4px 0;
+    }
+    .accordion-header .arrow { font-size: 0.7em; color: #888; transition: transform 0.3s; }
+    .accordion-header.open .arrow { transform: rotate(180deg); }
+    .accordion-body { display: none; }
+    .accordion-body.open { display: block; }
+
+    /* ── Leaflet divIcon 0x0 컨테이너 오버플로우 허용 ── */
+    .leaflet-marker-icon { overflow: visible !important; }
+
+    /* ── 마커 라벨 스타일 ── */
+    .place-label-wrap {
+      display: flex; align-items: center; white-space: nowrap;
+      pointer-events: auto; cursor: pointer;
+    }
+    .place-num-circle {
+      display: inline-flex; align-items: center; justify-content: center;
+      font-weight: bold; flex-shrink: 0;
+      border: none;
+      font-family: 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif;
+      text-shadow: 0 0 4px rgba(0,0,0,0.9), 0 0 8px rgba(0,0,0,0.6);
+      pointer-events: auto; cursor: pointer;
+    }
+    .place-name-label {
+      background: rgba(15,20,40,0.60);
+      color: #fff; font-family: 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif;
+      font-weight: 500;
+      padding: 2px 7px; border-radius: 4px;
+      white-space: nowrap; display: inline-block;
+      margin-left: 4px;
+      border: none;
+      text-shadow: 0 1px 2px rgba(0,0,0,0.6);
+      box-shadow: 0 1px 4px rgba(0,0,0,0.4);
+      pointer-events: auto; cursor: pointer;
+    }
+    /* 점(dot) 모드일 때는 세로 배치 */
+    .place-label-wrap.dot-mode {
+      flex-direction: column; align-items: center;
+    }
+    .place-label-wrap.dot-mode .place-name-label {
+      margin-left: 0; margin-top: 2px;
+    }
+
+    /* Leaflet popup */
+    .leaflet-popup-content-wrapper {
+      background: #1a1a2e; color: #eee; border: 1px solid #e94560; border-radius: 8px;
+    }
+    .leaflet-popup-tip { background: #1a1a2e; }
+    .leaflet-popup-content { margin: 12px 16px; }
+    .popup-num { display: inline-block; font-size: 1.1em; font-weight: bold; margin-right: 6px; }
+    .popup-title { font-size: 1em; font-weight: bold; color: #e94560; margin-bottom: 5px; }
+    .popup-verse { font-size: 0.79em; color: #4dd0e1; margin-bottom: 5px; }
+    .popup-desc { font-size: 0.81em; color: #ccc; line-height: 1.5; }
+    .popup-photo { font-size: 0.72em; color: #666; margin-top: 8px; border-top: 1px solid #333; padding-top: 6px; }
+
+    /* ── 모바일 드래그 핸들 ── */
+    .is-mobile #dragHandle {
+      display: flex; align-items: center; justify-content: flex-start;
+      padding: 12px 16px; cursor: grab;
+      background: #16213e; border-radius: 16px 16px 0 0;
+      flex-shrink: 0; position: sticky; top: 0; z-index: 10;
+      gap: 10px;
+    }
+    .is-mobile #dragHandle:active { cursor: grabbing; }
+    .drag-bar {
+      width: 36px; height: 4px; border-radius: 2px;
+      background: rgba(255,255,255,0.3);
+    }
+    .drag-label {
+      font-size: 0.72em; color: #888;
+      letter-spacing: 0.5px;
+    }
+    .is-desktop #dragHandle { display: none; }
+
+    /* ============================================================
+       모바일 반응형 (768px 이하)
+       ============================================================ */
+    @media (max-width: 768px) {
+      /* 헤더 축소 */
+      #header { padding: 8px 14px; }
+      #header h1 { font-size: 1em; }
+      #header p { display: none; }
+      #brand { font-size: 0.7em; }
+
+      /* 패널 내용 간격 조정 */
+      .panel { padding: 10px 14px; }
+      .panel h2 { font-size: 0.82em; margin-bottom: 8px; }
+      .route-name { font-size: 0.82em; }
+      .route-desc { font-size: 0.7em; }
+      .stat-grid { grid-template-columns: 1fr 1fr 1fr 1fr; gap: 5px; }
+      .stat-num { font-size: 1.1em; }
+      .stat-label { font-size: 0.62em; }
+      .info-box { font-size: 0.73em; padding: 8px; }
+      .companion-item { font-size: 0.72em; }
+      .mode-btn { padding: 8px 4px; font-size: 0.82em; }
+      .mode-hint { font-size: 0.66em; }
+
+      /* Leaflet 팝업 모바일 */
+      .leaflet-popup-content-wrapper { max-width: 260px; }
+      .leaflet-popup-content { margin: 10px 12px; }
+      .popup-title { font-size: 0.9em; }
+      .popup-desc { font-size: 0.76em; }
+    }
+  </style>
+</head>
+<body>
+
+<div id="header">
+  <div>
+    <h1>📍 성경지리로 보는 사도행전</h1>
+    <p>Acts of the Apostles — Biblical Geography Movement Map</p>
+  </div>
+  <div style="display:flex;align-items:center;gap:12px;">
+    <select id="mapSelector" onchange="switchMapLayer(this.value)" style="padding:5px 10px;border-radius:6px;border:1px solid #e94560;background:#1a1a2e;color:#e94560;font-size:0.78em;font-weight:bold;cursor:pointer;font-family:'Malgun Gothic',sans-serif;transition:all 0.2s;white-space:nowrap;outline:none;">
+      <option value="voyager" style="background:#1a1a2e;color:#e94560;">🧭 보이저</option>
+      <option value="satellite" style="background:#1a1a2e;color:#e94560;">🛰 위성</option>
+      <option value="street" style="background:#1a1a2e;color:#e94560;">🗺 일반</option>
+      <option value="topo" style="background:#1a1a2e;color:#e94560;">🏔 지형</option>
+      <option value="esri_street" style="background:#1a1a2e;color:#e94560;">🌿 거리 (Esri)</option>
+      <option value="esri_imagery" style="background:#1a1a2e;color:#e94560;">🛰 위성 (Esri)</option>
+    </select>
+    <div id="brand">BIBLELAND™</div>
+  </div>
+</div>
+
+<div id="main">
+  <div id="map"></div>
+
+  <!-- Desktop Sidebar -->
+  <div id="sidebar">
+
+    <!-- 경로 표시 설정 -->
+    <div class="panel" id="routePanel">
+      <h2 style="display:flex;align-items:center;justify-content:space-between;">
+        <span>🗺 경로 표시 설정</span>
+        <button onclick="resetAll()" style="font-size:0.7em;padding:3px 10px;border-radius:5px;border:1px solid #e94560;background:transparent;color:#e94560;cursor:pointer;font-family:'Malgun Gothic',sans-serif;letter-spacing:0.5px;transition:all 0.2s;" onmouseover="this.style.background='#e94560';this.style.color='#fff'" onmouseout="this.style.background='transparent';this.style.color='#e94560'">초기화</button>
+      </h2>
+
+      <!-- ▼ 지명 / 경로 전환 버튼 ▼ -->
+      <div class="mode-switch">
+        <button class="mode-btn active" id="modeSpotBtn" onclick="setViewMode('spot')">
+          <span class="mode-icon">●</span> 지명
+        </button>
+        <button class="mode-btn" id="modeRouteBtn" onclick="setViewMode('route')">
+          <span class="mode-icon">↝</span> 경로
+        </button>
+      </div>
+      <p class="mode-hint" id="modeHint">전체 57개 지명을 지도에 표시합니다.</p>
+
+      <!-- ▼ 통합 토글 목록 ▼ -->
+      <div id="itemToggles">
+        <div class="route-item">
+          <div class="route-color" style="background:#FF6D00"></div>
+          <div class="route-info">
+            <div class="route-name">바울의 부르심</div>
+            <div class="route-desc">행 9장; 갈 1:15-21 | 예루살렘→다메섹→아라비아→다소→안디옥</div>
+          </div>
+          <button class="route-toggle" id="tog-calling" onclick="toggleItem('calling', this)"></button>
+        </div>
+        <div class="route-item">
+          <div class="route-color" style="background:#FF3D00"></div>
+          <div class="route-info">
+            <div class="route-name">바울 제1차 전도여행</div>
+            <div class="route-desc">행 13–14장 | 안디옥→구브로→소아시아→안디옥</div>
+          </div>
+          <button class="route-toggle" id="tog-paul1" onclick="toggleItem('paul1', this)"></button>
+        </div>
+        <div class="route-item">
+          <div class="route-color" style="background:#00E5FF"></div>
+          <div class="route-info">
+            <div class="route-name">바울 제2차 전도여행</div>
+            <div class="route-desc">행 15:36–18:22 | 안디옥→마게도냐→그리스→안디옥</div>
+          </div>
+          <button class="route-toggle" id="tog-paul2" onclick="toggleItem('paul2', this)"></button>
+        </div>
+        <div class="route-item">
+          <div class="route-color" style="background:#00E676"></div>
+          <div class="route-info">
+            <div class="route-name">바울 제3차 전도여행</div>
+            <div class="route-desc">행 18:23–21:17 | 안디옥→에베소→마게도냐→예루살렘</div>
+          </div>
+          <button class="route-toggle" id="tog-paul3" onclick="toggleItem('paul3', this)"></button>
+        </div>
+        <div class="route-item">
+          <div class="route-color" style="background:#D500F9"></div>
+          <div class="route-info">
+            <div class="route-name">바울 제4차 전도여행 (로마압송)</div>
+            <div class="route-desc">행 27–28장 | 가이사랴→멜리데→로마</div>
+          </div>
+          <button class="route-toggle" id="tog-paul4" onclick="toggleItem('paul4', this)"></button>
+        </div>
+        <div class="route-item">
+          <div class="route-color" style="background:#FFD600"></div>
+          <div class="route-info">
+            <div class="route-name">빌립의 이동 경로</div>
+            <div class="route-desc">행 8장 | 예루살렘→사마리아→가사→가이사랴</div>
+          </div>
+          <button class="route-toggle" id="tog-philip" onclick="toggleItem('philip', this)"></button>
+        </div>
+        <div class="route-item">
+          <div class="route-color" style="background:#FF4081"></div>
+          <div class="route-info">
+            <div class="route-name">베드로의 이동 경로</div>
+            <div class="route-desc">행 9–10장 | 예루살렘→룻다→욥바→가이사랴</div>
+          </div>
+          <button class="route-toggle" id="tog-peter" onclick="toggleItem('peter', this)"></button>
+        </div>
+        <div class="route-item" id="commonItem" style="display:none;">
+          <div class="route-color" style="background:#FF1744"></div>
+          <div class="route-info">
+            <div class="route-name">공통·주요 지명</div>
+            <div class="route-desc">예루살렘, 다메섹, 가이사랴 등</div>
+          </div>
+          <button class="route-toggle" id="tog-common" onclick="toggleItem('common', this)"></button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 동행자 -->
+    <div class="panel">
+      <h2>👥 바울의 동행자</h2>
+      <div class="info-box">
+        <div style="color:#FF6D00; font-weight:bold; margin-bottom:5px;">⓪ 바울의 부르심 (행 9장; 갈 1:15-21)</div>
+        <div class="companion-item"><span class="companion-name">아나니아</span> — 다메섹에서 바울에게 안수, 세례 (행 9:17-18)</div>
+        <div class="companion-item"><span class="companion-name">바나바</span> — 안디옥으로 데려와 1년간 함께 가르침 (행 11:25-26)</div>
+      </div>
+      <div class="info-box" style="margin-top:6px;">
+        <div style="color:#FF3D00; font-weight:bold; margin-bottom:5px;">① 제1차 전도여행 (행 13–14장)</div>
+        <div class="companion-item"><span class="companion-name">바나바</span> — 전 여정 동행. 구브로 출신 레위인 (행 13:2)</div>
+        <div class="companion-item"><span class="companion-name">요한 마가</span> — 안디옥→버가; 버가에서 이탈 (행 13:13)</div>
+      </div>
+      <div class="info-box" style="margin-top:6px;">
+        <div style="color:#00E5FF; font-weight:bold; margin-bottom:5px;">② 제2차 전도여행 (행 15:36–18:22)</div>
+        <div class="companion-item"><span class="companion-name">실라</span> — 전 여정 동행 (행 15:40)</div>
+        <div class="companion-item"><span class="companion-name">디모데</span> — 루스드라 합류 (행 16:1)</div>
+        <div class="companion-item"><span class="companion-name">누가</span> — 드로아 합류 추정 (행 16:10 "우리")</div>
+        <div class="companion-item"><span class="companion-name">아굴라·브리스길라</span> — 고린도→에베소 (행 18:2,18)</div>
+      </div>
+      <div class="info-box" style="margin-top:6px;">
+        <div style="color:#00E676; font-weight:bold; margin-bottom:5px;">③ 제3차 전도여행 (행 18:23–21:17)</div>
+        <div class="companion-item"><span class="companion-name">디모데</span> — 동행 (행 19:22)</div>
+        <div class="companion-item"><span class="companion-name">에라스도</span> — 마게도냐까지 (행 19:22)</div>
+        <div class="companion-item"><span class="companion-name">소바더·아리스다고·세군도·가이오·두기고·드로비모</span> — 행 20:4</div>
+        <div class="companion-item"><span class="companion-name">누가</span> — 빌립보 재합류 (행 20:6 "우리")</div>
+      </div>
+      <div class="info-box" style="margin-top:6px;">
+        <div style="color:#D500F9; font-weight:bold; margin-bottom:5px;">④ 제4차 전도여행 /로마압송 (행 27–28장)</div>
+        <div class="companion-item"><span class="companion-name">아리스다고</span> — 데살로니가 출신 (행 27:2)</div>
+        <div class="companion-item"><span class="companion-name">누가</span> — 저자 본인 "우리" (행 27:1)</div>
+      </div>
+    </div>
+
+    <!-- 안내 -->
+    <div class="panel">
+      <h2>ℹ 사용 안내</h2>
+      <p class="legend-note">
+        • <b style="color:#fff">경로</b> 선택 → 같은 목록에서 경로 라인 개별 켜기·끄기<br>
+        • <b style="color:#fff">지명</b> 선택 → 같은 목록에서 지명 마커 그룹 개별 켜기·끄기<br>
+        • 마커 클릭 시 지명 설명·성경 구절 팝업 표시<br>
+        • 마우스 휠: 확대/축소 | 드래그: 이동<br><br>
+        📷 사진 참고: bibleland.net 에서 지명 검색
+      </p>
+    </div>
+
+    <!-- 통계 (접힘) -->
+    <div class="panel">
+      <div class="accordion-header" id="statHeader" onclick="toggleAccordion('stat')">
+        <span>📊 통계</span><span class="arrow">▼</span>
+      </div>
+      <div class="accordion-body" id="statBody">
+        <div class="stat-grid">
+          <div class="stat-item"><div class="stat-num">28</div><div class="stat-label">장(章)</div></div>
+          <div class="stat-item"><div class="stat-num">57</div><div class="stat-label">등장 지명</div></div>
+          <div class="stat-item"><div class="stat-num">7</div><div class="stat-label">인물 경로</div></div>
+          <div class="stat-item"><div class="stat-num">4</div><div class="stat-label">바울 여행</div></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Mobile Bottom Sheet -->
+  <div id="bottomSheet">
+    <div id="dragHandle">
+      <div class="drag-bar"></div>
+      <span class="drag-label">경로 설정 ▲</span>
+    </div>
+    <div style="overflow-y: auto; flex: 1;">
+
+      <!-- 경로 표시 설정 -->
+      <div class="panel" id="routePanelMobile">
+        <h2 style="display:flex;align-items:center;justify-content:space-between;">
+          <span>🗺 경로 표시 설정</span>
+          <button onclick="resetAll()" style="font-size:0.7em;padding:3px 10px;border-radius:5px;border:1px solid #e94560;background:transparent;color:#e94560;cursor:pointer;font-family:'Malgun Gothic',sans-serif;letter-spacing:0.5px;transition:all 0.2s;" onmouseover="this.style.background='#e94560';this.style.color='#fff'" onmouseout="this.style.background='transparent';this.style.color='#e94560'">초기화</button>
+        </h2>
+
+        <div class="mode-switch">
+          <button class="mode-btn active" id="modeSpotBtnMobile" onclick="setViewMode('spot')">
+            <span class="mode-icon">●</span> 지명
+          </button>
+          <button class="mode-btn" id="modeRouteBtnMobile" onclick="setViewMode('route')">
+            <span class="mode-icon">↝</span> 경로
+          </button>
+        </div>
+        <p class="mode-hint" id="modeHintMobile">전체 57개 지명을 지도에 표시합니다.</p>
+
+        <div id="itemTogglesMobile">
+          <div class="route-item">
+            <div class="route-color" style="background:#FF6D00"></div>
+            <div class="route-info">
+              <div class="route-name">바울의 부르심</div>
+              <div class="route-desc">행 9장; 갈 1:15-21</div>
+            </div>
+            <button class="route-toggle" id="tog-calling-m" onclick="toggleItem('calling', this)"></button>
+          </div>
+          <div class="route-item">
+            <div class="route-color" style="background:#FF3D00"></div>
+            <div class="route-info">
+              <div class="route-name">바울 제1차 전도여행</div>
+              <div class="route-desc">행 13–14장</div>
+            </div>
+            <button class="route-toggle" id="tog-paul1-m" onclick="toggleItem('paul1', this)"></button>
+          </div>
+          <div class="route-item">
+            <div class="route-color" style="background:#00E5FF"></div>
+            <div class="route-info">
+              <div class="route-name">바울 제2차 전도여행</div>
+              <div class="route-desc">행 15:36–18:22</div>
+            </div>
+            <button class="route-toggle" id="tog-paul2-m" onclick="toggleItem('paul2', this)"></button>
+          </div>
+          <div class="route-item">
+            <div class="route-color" style="background:#00E676"></div>
+            <div class="route-info">
+              <div class="route-name">바울 제3차 전도여행</div>
+              <div class="route-desc">행 18:23–21:17</div>
+            </div>
+            <button class="route-toggle" id="tog-paul3-m" onclick="toggleItem('paul3', this)"></button>
+          </div>
+          <div class="route-item">
+            <div class="route-color" style="background:#D500F9"></div>
+            <div class="route-info">
+              <div class="route-name">바울 제4차 전도여행</div>
+              <div class="route-desc">행 27–28장</div>
+            </div>
+            <button class="route-toggle" id="tog-paul4-m" onclick="toggleItem('paul4', this)"></button>
+          </div>
+          <div class="route-item">
+            <div class="route-color" style="background:#FFD600"></div>
+            <div class="route-info">
+              <div class="route-name">빌립의 이동 경로</div>
+              <div class="route-desc">행 8장</div>
+            </div>
+            <button class="route-toggle" id="tog-philip-m" onclick="toggleItem('philip', this)"></button>
+          </div>
+          <div class="route-item">
+            <div class="route-color" style="background:#FF4081"></div>
+            <div class="route-info">
+              <div class="route-name">베드로의 이동 경로</div>
+              <div class="route-desc">행 9–10장</div>
+            </div>
+            <button class="route-toggle" id="tog-peter-m" onclick="toggleItem('peter', this)"></button>
+          </div>
+          <div class="route-item" id="commonItemMobile" style="display:none;">
+            <div class="route-color" style="background:#FF1744"></div>
+            <div class="route-info">
+              <div class="route-name">공통·주요 지명</div>
+              <div class="route-desc">예루살렘, 다메섹, 가이사랴</div>
+            </div>
+            <button class="route-toggle" id="tog-common-m" onclick="toggleItem('common', this)"></button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 동행자 (아코디언) -->
+      <div class="panel">
+        <div class="accordion-header" id="companionHeaderM" onclick="toggleAccordion('companionM')">
+          <h2 style="margin-bottom:0;">👥 바울의 동행자</h2>
+          <span class="arrow">▼</span>
+        </div>
+        <div class="accordion-body" id="companionMBody">
+          <div class="info-box">
+            <div style="color:#FF6D00; font-weight:bold; margin-bottom:5px;">⓪ 바울의 부르심 (행 9장; 갈 1:15-21)</div>
+            <div class="companion-item"><span class="companion-name">아나니아</span> — 다메섹에서 바울에게 안수, 세례 (행 9:17-18)</div>
+            <div class="companion-item"><span class="companion-name">바나바</span> — 안디옥으로 데려와 1년간 함께 가르침 (행 11:25-26)</div>
+          </div>
+          <div class="info-box">
+            <div style="color:#FF3D00; font-weight:bold; margin-bottom:5px;">① 제1차 전도여행 (행 13–14장)</div>
+            <div class="companion-item"><span class="companion-name">바나바</span> — 전 여정 동행. 구브로 출신 레위인 (행 13:2)</div>
+            <div class="companion-item"><span class="companion-name">요한 마가</span> — 안디옥→버가; 버가에서 이탈 (행 13:13)</div>
+          </div>
+          <div class="info-box">
+            <div style="color:#00E5FF; font-weight:bold; margin-bottom:5px;">② 제2차 전도여행 (행 15:36–18:22)</div>
+            <div class="companion-item"><span class="companion-name">실라</span> — 전 여정 동행 (행 15:40)</div>
+            <div class="companion-item"><span class="companion-name">디모데</span> — 루스드라 합류 (행 16:1)</div>
+            <div class="companion-item"><span class="companion-name">누가</span> — 드로아 합류 추정 (행 16:10 "우리")</div>
+            <div class="companion-item"><span class="companion-name">아굴라·브리스길라</span> — 고린도→에베소 (행 18:2,18)</div>
+          </div>
+          <div class="info-box">
+            <div style="color:#00E676; font-weight:bold; margin-bottom:5px;">③ 제3차 전도여행 (행 18:23–21:17)</div>
+            <div class="companion-item"><span class="companion-name">디모데</span> — 동행 (행 19:22)</div>
+            <div class="companion-item"><span class="companion-name">에라스도</span> — 마게도냐까지 (행 19:22)</div>
+            <div class="companion-item"><span class="companion-name">소바더·아리스다고·세군도·가이오·두기고·드로비모</span> — 행 20:4</div>
+            <div class="companion-item"><span class="companion-name">누가</span> — 빌립보 재합류 (행 20:6 "우리")</div>
+          </div>
+          <div class="info-box">
+            <div style="color:#D500F9; font-weight:bold; margin-bottom:5px;">④ 제4차 전도여행 /로마압송 (행 27–28장)</div>
+            <div class="companion-item"><span class="companion-name">아리스다고</span> — 데살로니가 출신 (행 27:2)</div>
+            <div class="companion-item"><span class="companion-name">누가</span> — 저자 본인 "우리" (행 27:1)</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 안내 (아코디언) -->
+      <div class="panel">
+        <div class="accordion-header" id="guideHeaderM" onclick="toggleAccordion('guideM')">
+          <h2 style="margin-bottom:0;">ℹ 사용 안내</h2>
+          <span class="arrow">▼</span>
+        </div>
+        <div class="accordion-body" id="guideMBody">
+          <p class="legend-note">
+            • <b style="color:#fff">경로</b> 선택 → 경로 라인 개별 켜기·끄기<br>
+            • <b style="color:#fff">지명</b> 선택 → 지명 마커 그룹 개별 켜기·끄기<br>
+            • 마커 터치 시 지명 설명·성경 구절 팝업<br>
+            • 두 손가락 핀치: 확대/축소 | 드래그: 이동<br><br>
+            📷 사진 참고: bibleland.net 에서 지명 검색
+          </p>
+        </div>
+      </div>
+
+      <!-- 통계 (접힘) -->
+      <div class="panel">
+        <div class="accordion-header" id="statMHeader" onclick="toggleAccordion('statM')">
+          <span>📊 통계</span><span class="arrow">▼</span>
+        </div>
+        <div class="accordion-body" id="statMBody">
+          <div class="stat-grid">
+            <div class="stat-item"><div class="stat-num">28</div><div class="stat-label">장(章)</div></div>
+            <div class="stat-item"><div class="stat-num">57</div><div class="stat-label">등장 지명</div></div>
+            <div class="stat-item"><div class="stat-num">7</div><div class="stat-label">인물 경로</div></div>
+            <div class="stat-item"><div class="stat-num">4</div><div class="stat-label">바울 여행</div></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<script>
+// ============================================================
+// 디바이스 감지
+// ============================================================
+const ua = navigator.userAgent;
+const isIPad = ua.includes('iPad') || (ua.includes('Macintosh') && navigator.maxTouchPoints > 1);
+const isMobileDevice = window.innerWidth < 768 && !isIPad;
+document.body.className = isMobileDevice ? 'is-mobile' : 'is-desktop';
+
+window.addEventListener('resize', function() {
+  const isIPadR = ua.includes('iPad') || (ua.includes('Macintosh') && navigator.maxTouchPoints > 1);
+  const isMobileR = window.innerWidth < 768 && !isIPadR;
+  document.body.className = isMobileR ? 'is-mobile' : 'is-desktop';
+});
+
+// ============================================================
+// 지도 초기화
+// ============================================================
+const map = L.map('map', { center: [37.5, 28.0], zoom: 5 });
+
+const mapLayers = {
+  voyager: L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
+    attribution: '© CARTO · OpenStreetMap', maxZoom: 19, subdomains: 'abcd'
+  }),
+  satellite: L.tileLayer('https://mt{s}.google.com/vt/lyrs=y&x={x}&y={y}&z={z}', {
+    subdomains: '0123', attribution: '© Google', maxZoom: 20
+  }),
+  street: L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '© OpenStreetMap contributors', maxZoom: 18
+  }),
+  topo: L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
+    attribution: '© OpenTopoMap', maxZoom: 17
+  }),
+  esri_street: L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}', {
+    attribution: '© Esri · HERE · Garmin · OpenStreetMap', maxZoom: 18
+  }),
+  esri_imagery: L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+    attribution: '© Esri · Maxar · Earthstar', maxZoom: 19
+  })
+};
+let currentLayer = 'voyager';
+mapLayers.voyager.addTo(map);
+
+function switchMapLayer(layerKey) {
+  if (layerKey === currentLayer) return;
+  map.removeLayer(mapLayers[currentLayer]);
+  mapLayers[layerKey].addTo(map);
+  currentLayer = layerKey;
+}
+
+// ============================================================
+// 지명 데이터
+// ============================================================
+const COLORS = {
+  calling: '#FF6D00', paul1: '#FF3D00', paul2: '#00E5FF', paul3: '#00E676',
+  paul4: '#D500F9', philip: '#FFD600', peter: '#FF4081',
+  neutral: '#B0BEC5', important: '#FF1744'
+};
+
+const places = [
+  { id:'jerusalem',    num:1,  kor:'예루살렘',        nameEn:'Jerusalem',         color:COLORS.important, big:true,  latlng:[31.778,35.235], verse:'행 1:4; 2:5; 등', desc:'사도행전 전체의 출발점. 오순절 성령 강림의 현장이며, 초대교회가 시작된 성도. 다윗이 건설하고 솔로몬이 성전을 세운 이스라엘의 수도로, 해발 약 754m 고지에 위치한다.', photo:'bibleland.net/category/bibleland/israel-palestine/jerusalem-israel-palestinian' },
+  { id:'olives',       num:2,  kor:'감람산',           nameEn:'Mount of Olives',   color:COLORS.neutral,   big:false, latlng:[31.776,35.244], verse:'행 1:12', desc:'예루살렘 동쪽 기드론 골짜기 건너편 산. 예수께서 승천하신 장소로 기록되어 있다(행 1:12). 겟세마네 동산이 산기슭에 위치하며, 예루살렘에서 안식일 길(약 1km) 거리다.', photo:'검색: 감람산 올리브산' },
+  { id:'antioch_s',   num:3,  kor:'수리아 안디옥',    nameEn:'Antioch (Syria)',   color:COLORS.paul1,     big:true,  latlng:[36.203,36.156], verse:'행 11:26; 13:1; 14:26', desc:'오론테스 강변 로마 제국 제3의 도시. 제자들이 처음으로 "그리스도인"이라 불린 곳이며(행 11:26), 바울의 세 차례 전도여행 모두 이곳에서 출발·귀환했다. 현재 튀르키예의 안타키아(Antakya)다.', photo:'검색: 수리아 안디옥' },
+  { id:'seleucia',    num:4,  kor:'실루기아',          nameEn:'Seleucia Pieria',   color:COLORS.paul1,     big:false, latlng:[36.118,35.931], verse:'행 13:4', desc:'수리아 안디옥에서 약 25km 거리 지중해 항구 도시. 바울과 바나바가 제1차 전도여행을 시작하며 배를 탄 곳이다(행 13:4). 셀레우코스 1세가 건설했으며, 현재 튀르키예 사만다으 인근에 유적이 있다.', photo:'검색: 실루기아' },
+  { id:'salamis',     num:5,  kor:'살라미 (구브로)',   nameEn:'Salamis, Cyprus',   color:COLORS.paul1,     big:false, latlng:[35.175,33.88], verse:'행 13:5', desc:'구브로(키프로스) 섬 동쪽 해안의 주요 항구 도시. 바나바의 고향 섬 구브로의 관문으로, 바울과 바나바가 제1차 전도여행에서 첫 번째로 방문한 도시다(행 13:5).', photo:'검색: 살라미 구브로 키프로스' },
+  { id:'paphos',      num:6,  kor:'바보 (구브로)',     nameEn:'Paphos, Cyprus',    color:COLORS.paul1,     big:false, latlng:[34.759,32.414], verse:'행 13:6-12', desc:'구브로 섬 서남단 로마 총독 거점. 총독 서기오 바울로가 믿었고, 마술사 엘루마가 눈이 어두워진 사건이 일어났다(행 13:12). 이곳에서부터 "사울"이 "바울"로 불리기 시작했다.', photo:'bibleland.net/category/bibleland/turkiye/길리기아와수리아-그리고-구브로/파포스_paphos' },
+  { id:'perga',       num:7,  kor:'버가 (밤빌리아)',   nameEn:'Perga, Pamphylia',  color:COLORS.paul1,     big:false, latlng:[36.961,30.853], verse:'행 13:13; 14:25', desc:'소아시아 밤빌리아 지방 내륙 도시. 요한 마가가 바울 일행에서 이탈해 예루살렘으로 돌아간 곳이다(행 13:13). 앗달리아에서 약 12km 내륙에 위치하며 아르테미스 신전으로 유명했다.', photo:'검색: 버가 페르게 밤빌리아' },
+  { id:'antioch_p',  num:8,  kor:'비시디아 안디옥',   nameEn:'Antioch of Pisidia',color:COLORS.paul1,     big:false, latlng:[38.307,31.187], verse:'행 13:14', desc:'소아시아 비시디아 지방 도시로 현재 튀르키예 야르바츠 인근. 바울이 회당에서 구약 역사와 예수의 부활을 논증한 긴 설교를 했다(행 13:16-41). 유대인 반발로 이고니온으로 추방당했다(행 13:50).', photo:'검색: 비시디아 안디옥 야르바츠' },
+  { id:'iconium',    num:9,  kor:'이고니온',           nameEn:'Iconium',           color:COLORS.paul1,     big:false, latlng:[37.871,32.492], verse:'행 13:51; 14:1', desc:'소아시아 도시로 현재 튀르키예 코냐(Konya). 바울과 바나바가 회당에서 전도하여 많은 사람이 믿었으나 박해를 받아 루스드라로 피신했다(행 14:5-6).', photo:'검색: 이고니온 코냐 튀르키예' },
+  { id:'lystra',     num:10, kor:'루스드라',           nameEn:'Lystra',            color:COLORS.paul1,     big:false, latlng:[37.603,32.339], verse:'행 14:6; 16:1', desc:'소아시아 리카오니아 지방 도시. 바울이 앉은뱅이를 치유했고 돌로 맞아 죽은 줄 알았다(행 14:19). 디모데의 고향이기도 하다(행 16:1).', photo:'검색: 루스드라 리스트라 소아시아' },
+  { id:'derbe',      num:11, kor:'더베',               nameEn:'Derbe',             color:COLORS.paul1,     big:false, latlng:[37.351,33.361], verse:'행 14:20; 16:1', desc:'리카오니아 지방 도시로 현재 튀르키예 케르티 회육 인근. 바울이 루스드라에서 돌에 맞은 후 이튿날 이곳으로 이동해 많은 제자를 삼았다(행 14:20-21). 가이오의 고향이다(행 20:4).', photo:'bibleland.net/category/bibleland/turkiye/갈라디아/더베_에키노주_ekinozu' },
+  { id:'attalia',    num:12, kor:'앗달리아',           nameEn:'Attalia (Antalya)', color:COLORS.paul1,     big:false, latlng:[36.885,30.701], verse:'행 14:25', desc:'밤빌리아 지방 지중해 해안 항구 도시. 바울과 바나바가 제1차 전도여행을 마치고 귀환하며 승선한 항구다(행 14:25-26). 아탈로스 2세가 건설했으며 현재 튀르키예 안탈리아(Antalya)다.', photo:'bibleland.net/category/bibleland/turkiye/4-루기아와-밤빌리아/앗달리아_antalya' },
+  { id:'tarsus',     num:13, kor:'다소',               nameEn:'Tarsus',            color:COLORS.paul2,     big:false, latlng:[36.919,34.894], verse:'행 9:11; 21:39; 22:3', desc:'길리기아 지방 도시로 바울의 출생지(행 22:3). 로마 속주 길리기아의 수도였으며 스토아 철학의 영향이 강한 학문 도시였다. 현재 튀르키예 메르신 주에 위치한다.', photo:'bibleland.net/category/bibleland/turkiye/길리기아와수리아-그리고-구브로/다소_tarsus' },
+  { id:'damascus',   num:14, kor:'다메섹',             nameEn:'Damascus',          color:COLORS.neutral,   big:true,  latlng:[33.513,36.307], verse:'행 9:2; 22:6', desc:'수리아(시리아)의 수도. 바울이 그리스도인을 잡으러 가던 도중 부활하신 예수를 만나 회심한 역사적 장소다(행 9:3-9). 아나니아를 통해 세례를 받고 사역을 시작했다(행 9:17-19).', photo:'검색: 다마스쿠스 다메섹 시리아' },
+  { id:'lydda',      num:15, kor:'룻다',               nameEn:'Lydda (Lod)',       color:COLORS.peter,     big:false, latlng:[31.951,34.895], verse:'행 9:32', desc:'유대 평야 도시로 현재 이스라엘의 롯(Lod). 베드로가 8년간 중풍으로 누워 있던 애니아를 치유한 곳이다(행 9:33-34). 이 기적으로 사론 평야 주민 다수가 회심했다.', photo:'검색: 룻다 롯 이스라엘' },
+  { id:'sharon',     num:16, kor:'사론 평야',           nameEn:'Plain of Sharon',   color:COLORS.peter,     big:false, latlng:[32.222,34.871], verse:'행 9:35', desc:'지중해 연안을 따라 남북으로 약 80km 펼쳐진 해안 평야. 베드로의 룻다 치유 기적 소문으로 "사론에 사는 사람들도 다 주께로 돌아오더라"고 기록된다(행 9:35).', photo:'검색: 사론 평야 이스라엘' },
+  { id:'joppa',      num:17, kor:'욥바',               nameEn:'Joppa (Jaffa)',     color:COLORS.peter,     big:false, latlng:[32.053,34.751], verse:'행 9:36; 10:5', desc:'지중해 해안 고대 항구 도시로 현재 이스라엘 텔아비브-야파 구시가. 베드로가 다비다를 살린 곳이며(행 9:40), 옥상 기도 중 이방인 음식 환상을 받아 고넬료에게 파송된 곳이다(행 10:9-16).', photo:'검색: 욥바 야파 항구 이스라엘' },
+  { id:'caesarea',   num:18, kor:'가이사랴',           nameEn:'Caesarea Maritima', color:COLORS.important, big:true,  latlng:[32.497,34.889], verse:'행 8:40; 10:1; 18:22; 21:8; 23:23', desc:'헤롯 대왕이 건설한 지중해 해안 도시로 유대 총독 행정 수도. 고넬료의 집이 있어 이방인 최초 성령 임재가 일어난 곳이다(행 10:1). 빌립과 바울 모두 이곳을 거점으로 활동했다.', photo:'bibleland.net/category/bibleland/israel-palestine/mediterranean-sea/caesarea' },
+  { id:'samaria',    num:19, kor:'사마리아',           nameEn:'Samaria',           color:COLORS.philip,    big:false, latlng:[32.277,35.193], verse:'행 8:1,5,14', desc:'유대 북쪽 혼혈 사마리아인 거주 지역. 스데반 순교 후 핍박을 피해 흩어진 그리스도인들이 이곳에 복음을 전했다(행 8:1). 빌립이 전도하여 큰 기쁨이 있었고 베드로·요한도 방문했다(행 8:14).', photo:'bibleland.net/category/bibleland/israel-palestine/samarita/samaria-sebaste' },
+  { id:'gaza',       num:20, kor:'가사 (광야 길)',      nameEn:'Gaza Road',         color:COLORS.philip,    big:false, latlng:[31.501,34.466], verse:'행 8:26', desc:'예루살렘에서 남서쪽으로 내려가는 광야 길로 국제 통상로. 천사가 빌립에게 이 길로 가라 명하여 에디오피아 내시를 만나 이사야서 53장을 설명하고 세례를 베풀었다(행 8:26-38).', photo:'검색: 가사 광야 길' },
+  { id:'azotus',     num:21, kor:'아소도',             nameEn:'Azotus (Ashdod)',   color:COLORS.philip,    big:false, latlng:[31.824,34.656], verse:'행 8:40', desc:'블레셋 옛 성읍으로 현재 이스라엘 아쉬도드. 빌립이 에디오피아 내시에게 세례 후 성령에 이끌려 갑자기 나타난 곳이다(행 8:40). 이곳에서 가이사랴까지 해안 도시들을 따라 전도하며 이동했다.', photo:'검색: 아소도 아쉬도드 이스라엘' },
+  { id:'tyre',       num:22, kor:'두로',               nameEn:'Tyre',              color:COLORS.paul3,     big:false, latlng:[33.272,35.196], verse:'행 21:3', desc:'레바논 해안 고대 페니키아 도시. 바울이 3차 전도여행 귀환 시 7일 머문 곳으로(행 21:4), 성도들이 성령의 감동으로 예루살렘에 가지 말라 권고했다. 현재 레바논의 티르(Tyre/Sour)다.', photo:'검색: 두로 티르 레바논' },
+  { id:'ptolemais',  num:23, kor:'돌레마이',           nameEn:'Ptolemais (Akko)',  color:COLORS.paul3,     big:false, latlng:[32.923,35.069], verse:'행 21:7', desc:'갈멜 산 북쪽 해안 항구로 현재 이스라엘 아코(Akko/Acre). 바울이 두로에서 가이사랴로 이동하며 형제들을 만나 하루 머문 곳이다(행 21:7). 유네스코 세계문화유산이다.', photo:'검색: 돌레마이' },
+  { id:'troas',      num:24, kor:'드로아',             nameEn:'Troas',             color:COLORS.paul2,     big:true,  latlng:[39.759,26.139], verse:'행 16:8; 20:5', desc:'소아시아 북서쪽 미시아 해안 도시. 바울이 마게도냐 환상을 받고 유럽으로 건너가기로 결정한 곳이다(행 16:9-10). 3차 전도여행에서 유두고를 살린 사건도 이곳에서 일어났다(행 20:9).', photo:'검색: 드로아 트로아스 소아시아' },
+  { id:'neapolis',   num:25, kor:'네압볼리',           nameEn:'Neapolis (Kavala)', color:COLORS.paul2,     big:false, latlng:[40.939,24.414], verse:'행 16:11', desc:'마게도냐 항구 도시로 바울이 유럽에 처음 발을 디딘 상륙지(행 16:11). 빌립보의 외항 역할을 했으며 현재 그리스의 카발라(Kavala)다.', photo:'검색: 네압볼리' },
+  { id:'philippi',   num:26, kor:'빌립보',             nameEn:'Philippi',          color:COLORS.paul2,     big:true,  latlng:[41.014,24.287], verse:'행 16:12', desc:'마게도냐 제1 성읍으로 로마 식민지. 바울이 유럽에서 처음 교회를 세운 역사적 장소로(행 16:12-15), 루디아 회심과 옥수장이 가족 세례가 이곳에서 일어났다. 현재 그리스에 유적이 있다.', photo:'bibleland.net/category/bibleland/그리스_greece/1-마게도냐/빌립보_필리피_philippi' },
+  { id:'amphipolis', num:27, kor:'암비볼리',           nameEn:'Amphipolis',        color:COLORS.paul2,     big:false, latlng:[40.814,23.852], verse:'행 17:1', desc:'마게도냐 스트리몬 강이 돌아 흐르는 곳에 위치한 도시. 바울이 에그나티아 도로를 따라 데살로니가로 가는 도중 통과한 경유지다(행 17:1).', photo:'검색: 암비볼리 에그나티아 도로 그리스' },
+  { id:'apollonia',  num:28, kor:'아볼로니아',         nameEn:'Apollonia',         color:COLORS.paul2,     big:false, latlng:[40.653,23.485], verse:'행 17:1', desc:'마게도냐 에그나티아 도로 위의 도시로 데살로니가에서 약 50km 지점. 바울이 데살로니가로 가는 도중 통과한 역참 도시다(행 17:1).', photo:'검색: 아볼로니아 그리스' },
+  { id:'thessalonica',num:29,kor:'데살로니가',         nameEn:'Thessalonica',      color:COLORS.paul2,     big:true,  latlng:[40.633,22.948], verse:'행 17:1', desc:'마게도냐 속주 수도. 바울이 3개 안식일 동안 회당에서 강론하여 교회를 세웠으나 유대인 소동으로 베뢰아로 피신했다(행 17:2-4). 현재 그리스 테살로니키(Thessaloniki)다.', photo:'bibleland.net/category/bibleland/그리스_greece/1-마게도냐/데살로니가_thessalonikis' },
+  { id:'berea',      num:30, kor:'베뢰아',             nameEn:'Berea (Veria)',     color:COLORS.paul2,     big:false, latlng:[40.523,22.201], verse:'행 17:10', desc:'마게도냐 도시. "날마다 성경을 상고하므로" 신사적이라는 칭찬을 받았다(행 17:11). 데살로니가에서 서쪽 약 70km에 위치하며 현재 그리스의 베리아(Veria)다.', photo:'검색: 베뢰아' },
+  { id:'athens',     num:31, kor:'아덴 (아테네)',       nameEn:'Athens',            color:COLORS.paul2,     big:true,  latlng:[37.972,23.724], verse:'행 17:15', desc:'그리스 문명 중심지. 바울이 아레오바고에서 "알지 못하는 신에게" 제단을 근거로 창조주 하나님과 예수의 부활을 선포했다(행 17:22-31). 에피쿠로스·스토아 철학자들과 논쟁했다.', photo:'검색: 아테네 아레오바고 아덴' },
+  { id:'corinth',    num:32, kor:'고린도',             nameEn:'Corinth',           color:COLORS.paul2,     big:true,  latlng:[37.907,22.879], verse:'행 18:1', desc:'그리스 남부 코린토스 지협의 상업 도시. 바울이 약 18개월 체류하며 교회를 세웠다(행 18:11). 아굴라·브리스길라와 함께 천막을 만들며 전도했으며, 총독 갈리오 앞에서 무죄 방면되었다.', photo:'bibleland.net/category/bibleland/그리스_greece/아가야_그레데/고린도_korinthos' },
+  { id:'cenchreae',  num:33, kor:'겐그레아',           nameEn:'Cenchreae',         color:COLORS.paul2,     big:false, latlng:[37.886,22.989], verse:'행 18:18', desc:'고린도 동쪽 에게 해 항구. 바울이 서원을 이행하고 머리를 깎은 곳이다(행 18:18). 뵈뵈가 섬기던 겐그레아 교회가 이곳에 있었다(롬 16:1).', photo:'bibleland.net/category/bibleland/그리스_greece/아가야_그레데/겐그레아_kechries' },
+  { id:'ephesus',    num:34, kor:'에베소',             nameEn:'Ephesus',           color:COLORS.paul2,     big:true,  latlng:[37.941,27.342], verse:'행 18:19; 19:1', desc:'소아시아 에게 해 연안 아시아 속주 수도. 바울이 약 3년 머물며(행 20:31) 두란노 서원에서 강론하여 아시아 전역에 복음이 전파되었다(행 19:10). 아르테미스 신전과 데메드리오의 소동으로 유명하다.', photo:'bibleland.net/category/bibleland/turkiye/아시아무시아/에베소_ephesus' },
+  { id:'miletus',    num:35, kor:'밀레도',             nameEn:'Miletus',           color:COLORS.paul3,     big:true,  latlng:[37.531,27.278], verse:'행 20:15', desc:'소아시아 에게 해 연안 고대 이오니아 도시. 바울이 3차 귀환 시 에베소 장로들을 불러 고별 연설을 한 장소다(행 20:17-38). 무릎 꿇고 기도하며 눈물로 작별한 감동적 장면의 배경이다.', photo:'bibleland.net/category/bibleland/turkiye/아시아무시아/밀레도_miletus' },
+  { id:'assos',      num:36, kor:'앗소',               nameEn:'Assos',             color:COLORS.paul3,     big:false, latlng:[39.491,26.337], verse:'행 20:13', desc:'소아시아 아드라미테 만의 항구 도시. 바울만 도보로 걷고 일행은 배로 이동한 독특한 경로가 기록되어 있다(행 20:13). 현재 튀르키예 베흐람칼레(Behramkale)로, 아테나 신전 유적이 있다.', photo:'bibleland.net/category/bibleland/turkiye/아시아무시아/앗소_assos' },
+  { id:'mytilene',   num:37, kor:'미둘레네',           nameEn:'Mytilene (Lesbos)', color:COLORS.paul3,     big:false, latlng:[39.104,26.555], verse:'행 20:14', desc:'에게 해 레스보스 섬의 주도. 바울이 3차 전도여행 귀환 도중 들른 곳이다(행 20:14). 서정시인 사포의 고향으로 알려진 문화의 섬이다.', photo:'bibleland.net/category/bibleland/그리스_greece/1-마게도냐/미둘레네_mytilene' },
+  { id:'chios',      num:38, kor:'기오',               nameEn:'Chios',             color:COLORS.paul3,     big:false, latlng:[38.372,26.064], verse:'행 20:15', desc:'에게 해 동부 섬. 바울의 귀환 항로상 경유지로 기록되어 있다(행 20:15). 고대에 마스틱 향료 수지로 유명했다.', photo:'검색: 기오 키오스 섬 그리스' },
+  { id:'samos',      num:39, kor:'사모',               nameEn:'Samos',             color:COLORS.paul3,     big:false, latlng:[37.691,26.838], verse:'행 20:15', desc:'소아시아 서안의 섬. 바울의 귀환 항로 경유지다(행 20:15). 수학자 피타고라스의 출생지로 알려진 고대 문명의 섬이다.', photo:'bibleland.net/45616' },
+  { id:'cos',        num:40, kor:'고스',               nameEn:'Cos',               color:COLORS.paul3,     big:false, latlng:[36.894,27.056], verse:'행 21:1', desc:'에게 해 도데카네스 군도의 섬. 로도로 가기 전 경유한 곳이다(행 21:1). 의학의 아버지 히포크라테스의 출생지로 유명하다.', photo:'bibleland.net/category/bibleland/그리스_greece/1-마게도냐/고스_코스_kos' },
+  { id:'rhodes',     num:41, kor:'로도',               nameEn:'Rhodes',            color:COLORS.paul3,     big:false, latlng:[36.441,28.224], verse:'행 21:1', desc:'에게 해와 지중해 교차점의 섬. 고대 세계 7대 불가사의 로도스의 거상으로 유명하다. 바울이 3차 귀환 시 바다라로 가기 전 경유한 섬이다(행 21:1).', photo:'bibleland.net/category/bibleland/그리스_greece/1-마게도냐/로데_로데스_rhodes' },
+  { id:'patara',     num:42, kor:'바다라',             nameEn:'Patara',            color:COLORS.paul3,     big:false, latlng:[36.347222,29.322861], verse:'행 21:1', desc:'소아시아 리키아 지방 항구 도시. 바울 일행이 로도에서 이곳에서 두로로 직항하는 배로 갈아탔다(행 21:1-3). 아폴로 신탁소로 유명했으며 현재 튀르키예 안탈리아 주 게레미쉬 인근이다.', photo:'검색: 바다라 파타라 리키아 튀르키예' },
+  { id:'sidon',      num:43, kor:'시돈',               nameEn:'Sidon',             color:COLORS.paul4,     big:false, latlng:[33.559,35.372], verse:'행 27:3', desc:'레바논 해안 고대 페니키아 도시. 바울이 로마 이송 중 백부장의 허락으로 친구들을 만난 곳이다(행 27:3). 두로와 함께 고대 페니키아 양대 도시로 현재 레바논의 사이다(Saida)다.', photo:'검색: 시돈 사이다 레바논' },
+  { id:'myra',       num:44, kor:'무라 (루기아)',       nameEn:'Myra (Lycia)',      color:COLORS.paul4,     big:false, latlng:[36.226,29.956], verse:'행 27:5', desc:'소아시아 리키아 지방 주요 항구. 백부장이 알렉산드리아에서 이탈리아로 항해하는 배로 갈아탄 곳이다(행 27:5-6). 성 니콜라스 주교의 활동지로 현재 튀르키예 뎀레(Demre)다.', photo:'bibleland.net/category/bibleland/turkiye/4-루기아와-밤빌리아/무라_demre' },
+  { id:'fairhavens', num:45, kor:'미항 (그레데)',       nameEn:'Fair Havens, Crete',color:COLORS.paul4,     big:false, latlng:[34.919,24.798], verse:'행 27:8', desc:'그레데(크레타) 섬 남안 항구. 바울이 이곳에서 겨울을 나야 안전하다고 경고했으나 다수 의견으로 항해를 강행하다 폭풍을 만났다(행 27:9-11). 라새아 마을 근처에 위치한다.', photo:'검색: 미항' },
+  { id:'malta',      num:46, kor:'멜리데 (몰타)',       nameEn:'Malta',             color:COLORS.paul4,     big:true,  latlng:[35.897,14.514], verse:'행 28:1', desc:'지중해 중앙부의 섬. 바울 일행이 폭풍으로 14일 표류 후 276명이 파선하고 상륙한 곳이다(행 27:37; 28:1). 독사에 물려도 이상이 없었고, 보블리오의 아버지를 치유했다. 3개월 체류했다.', photo:'검색: 멜리데 몰타 Malta 바울' },
+  { id:'syracuse',   num:47, kor:'수라구사',           nameEn:'Syracuse',          color:COLORS.paul4,     big:false, latlng:[37.075,15.287], verse:'행 28:12', desc:'시칠리아 섬 동남쪽 해안 고대 그리스 식민 도시. 바울이 멜리데에서 출발한 후 처음 기항해 3일간 머문 곳이다(행 28:12). 아르키메데스의 고향으로 유명하다.', photo:'검색: 수라구사 시라쿠사 시칠리아 이탈리아' },
+  { id:'rhegium',    num:48, kor:'레기온',             nameEn:'Rhegium',           color:COLORS.paul4,     big:false, latlng:[38.109,15.644], verse:'행 28:13', desc:'이탈리아 반도 최남단 칼라브리아 지방 항구 도시. 바울이 이탈리아 본토에 처음 발을 디딘 기항지다(행 28:13). 현재 이탈리아 레조 칼라브리아(Reggio Calabria)다.', photo:'검색: 레기온 레조칼라브리아 이탈리아' },
+  { id:'puteoli',    num:49, kor:'보디올',             nameEn:'Puteoli (Pozzuoli)',color:COLORS.paul4,     big:false, latlng:[40.825,14.12], verse:'행 28:13', desc:'이탈리아 나폴리 만 항구 도시. 로마 시대 알렉산드리아 곡물선의 종착항으로 가장 분주한 무역항이었다. 바울이 형제들과 7일간 체류한 곳이다(행 28:14). 현재 이탈리아 포추올리(Pozzuoli)다.', photo:'검색: 보디올 포추올리 나폴리만 이탈리아' },
+  { id:'rome',       num:50, kor:'로마',               nameEn:'Rome',              color:COLORS.paul4,     big:true,  latlng:[41.892,12.485], verse:'행 28:14', desc:'사도행전의 최종 목적지이자 로마 제국의 수도. 바울이 2년간 가택 연금 상태로 "하나님 나라를 전파하며 주 예수 그리스도에 관한 것을 담대히 가르쳤다"(행 28:31). "땅 끝까지 이르러 내 증인이 되리라"(행 1:8)의 성취 장소다.', photo:'검색: 셋집' },
+  { id:'mesopotamia',num:51, kor:'메소포타미아',       nameEn:'Mesopotamia',       color:COLORS.neutral,   big:false, latlng:[33.331,44.415],     verse:'행 2:9; 7:2', desc:'티그리스·유프라테스 두 강 사이 지역으로 현재 이라크에 해당한다. 오순절 디아스포라의 출신지(행 2:9)이며, 아브라함이 갈대아 우르에서 부름받은 땅이기도 하다(행 7:2).', photo:'검색: 메소포타미아 이라크' },
+  { id:'haran',      num:52, kor:'하란',               nameEn:'Haran',             color:COLORS.neutral,   big:false, latlng:[36.862,39.028], verse:'행 7:4', desc:'메소포타미아 북부 고대 도시로 현재 튀르키예 샨르우르파 주에 있다. 아브라함이 갈대아를 떠나 가나안으로 이주하기 전 정착한 곳으로 스데반의 설교에 인용되었다(행 7:4).', photo:'검색: 하란 튀르키예 달 신전' },
+  { id:'shechem',    num:53, kor:'세겜',               nameEn:'Shechem',           color:COLORS.neutral,   big:false, latlng:[32.213,35.282], verse:'행 7:16', desc:'그리심 산과 에발 산 사이 고대 도시. 스데반의 설교에서 야곱과 그 아들들이 장사된 곳으로 언급된다(행 7:16). 현재 팔레스타인 자치 지역 나블루스(Nablus) 인근이다.', photo:'검색: 세겜 나블루스 팔레스타인' },
+  { id:'arabia',     num:54, kor:'아라비아 (페트라)',    nameEn:'Arabia (Petra)',     color:COLORS.calling,   big:false, latlng:[30.328,35.441], verse:'갈 1:17', desc:'바울이 다메섹에서 회심한 후 아라비아로 갔다가 다시 다메섹으로 돌아왔다(갈 1:17). 나바테아 왕국의 수도 페트라 일대로 추정된다. 아레다 왕이 다메섹에 총독을 두었던 기록(고후 11:32)과 연관된다.', photo:'검색: 페트라' },
+  { id:'appii_forum', num:55, kor:'압비오 광장',         nameEn:'Forum of Appius',   color:COLORS.paul4,     big:false, latlng:[41.467,12.998], verse:'행 28:15', desc:'로마에서 남쪽으로 약 69km 떨어진 아피아 가도 위의 역참 도시다. 로마의 형제들이 바울이 온다는 소식을 듣고 이곳까지 마중 나왔다(행 28:15). 바울은 이들을 보고 하나님께 감사하며 담대한 마음을 얻었다.', photo:'검색: 압비오 광장 아피아 가도 이탈리아' },
+  { id:'tres_tabernae', num:56, kor:'트레이스 타베르네',  nameEn:'Three Taverns',     color:COLORS.paul4,     big:false, latlng:[41.565,12.876], verse:'행 28:15', desc:'로마에서 남쪽으로 약 53km 떨어진 아피아 가도 위의 휴게소다. 압비오 광장과 함께 로마 형제들이 바울을 영접하러 나온 장소로 기록되어 있다(행 28:15). 현재 치스테르나 디 라티나 인근으로 추정된다.', photo:'bibleland.net/category/bibleland/6-이탈리아/트레이스-타베르네' },
+  { id:'antipatris',  num:57, kor:'안디바드리',          nameEn:'Antipatris',        color:COLORS.paul4,     big:false, latlng:[32.114,34.93], verse:'행 23:31', desc:'예루살렘과 가이사랴 사이 해안 평야의 도시로 헤롯 대왕이 아버지 안디바더의 이름을 따 건설했다. 바울이 예루살렘에서 체포된 후 군사들의 호송으로 밤중에 이곳까지 이동했다(행 23:31). 이튿날 기병대가 바울을 가이사랴의 총독 벨릭스에게 인도했다. 현재 이스라엘 텔아펙(Tel Afek) 유적지다.', photo:'bibleland.net/category/bibleland/israel-palestine/mediterranean-sea/aphak' },
+];
+
+const routeOrder = {
+  calling: ['jerusalem','damascus','arabia','damascus','jerusalem','tarsus','antioch_s'],
+  paul1: ['antioch_s','seleucia','salamis','paphos','perga','antioch_p','iconium','lystra','derbe','lystra','iconium','antioch_p','perga','attalia','antioch_s'],
+  paul2: ['antioch_s','tarsus','derbe','lystra','troas','neapolis','philippi','amphipolis','apollonia','thessalonica','berea','athens','corinth','cenchreae','ephesus','caesarea','jerusalem','antioch_s'],
+  paul3: ['antioch_s','tarsus','ephesus','philippi','corinth','philippi','troas','assos','mytilene','chios','samos','miletus','cos','rhodes','patara','tyre','ptolemais','caesarea','jerusalem'],
+  paul4: ['jerusalem','antipatris','caesarea','sidon','myra','fairhavens','malta','syracuse','rhegium','puteoli','appii_forum','tres_tabernae','rome'],
+  philip: ['jerusalem','samaria','gaza','azotus','caesarea'],
+  peter: ['jerusalem','lydda','joppa','caesarea','jerusalem']
+};
+
+const circledNums = ['①','②','③','④','⑤','⑥','⑦','⑧','⑨','⑩','⑪','⑫','⑬','⑭','⑮','⑯','⑰','⑱','⑲','⑳','㉑','㉒','㉓','㉔','㉕','㉖','㉗','㉘','㉙','㉚'];
+
+// ============================================================
+// 마커 아이콘 생성
+// ============================================================
+function makePlaceIcon(num, kor, color, big) {
+  const fSize = big ? 18 : 15;
+  const nSize = big ? 14 : 12;
+  const label = (typeof num === 'number' && num >= 1 && num <= 30) ? circledNums[num - 1] : num;
+  // 원문자가 정확히 좌표 위치에 고정, 지명은 오른쪽에 오프셋
+  return L.divIcon({
+    html: `<div class="place-label-wrap">
+      <div class="place-num-circle" style="color:${color};font-size:${fSize}px;">${label}</div>
+      <div class="place-name-label" style="font-size:${nSize}px;">${kor}</div>
+    </div>`,
+    className: '', iconSize: [0, 0], iconAnchor: [fSize / 2, fSize / 2]
+  });
+}
+
+function makeDotIcon(kor, color, big) {
+  const dotSize = big ? 14 : 11;
+  const nSize = big ? 13 : 11;
+  // 점이 좌표 위치에 고정, 지명은 아래에 배치
+  return L.divIcon({
+    html: `<div class="place-label-wrap dot-mode">
+      <div class="place-num-circle" style="width:${dotSize}px;height:${dotSize}px;background:${color};font-size:0px;border-radius:50%;border:2px solid rgba(255,255,255,0.5);box-shadow:0 1px 5px rgba(0,0,0,0.65);"></div>
+      <div class="place-name-label" style="font-size:${nSize}px;">${kor}</div>
+    </div>`,
+    className: '', iconSize: [0, 0], iconAnchor: [dotSize / 2, dotSize / 2]
+  });
+}
+
+function colorToGroup(color) {
+  if (color === COLORS.calling) return 'calling';
+  if (color === COLORS.paul1)  return 'paul1';
+  if (color === COLORS.paul2)  return 'paul2';
+  if (color === COLORS.paul3)  return 'paul3';
+  if (color === COLORS.paul4)  return 'paul4';
+  if (color === COLORS.philip) return 'philip';
+  if (color === COLORS.peter)  return 'peter';
+  return 'common';
+}
+
+const placeById = {};
+places.forEach(pl => { placeById[pl.id] = pl; });
+
+const spotGroups = { calling: L.layerGroup(), paul1: L.layerGroup(), paul2: L.layerGroup(), paul3: L.layerGroup(), paul4: L.layerGroup(), philip: L.layerGroup(), peter: L.layerGroup(), common: L.layerGroup() };
+
+function makePopup(pl, seqLabel) {
+  const numDisplay = seqLabel || pl.num;
+  let linkUrl, linkText;
+  const directMatch = pl.photo.match(/^bibleland\.net\/.+/);
+  if (directMatch) {
+    linkUrl = 'https://' + pl.photo;
+    linkText = '📷 ' + pl.photo;
+  } else {
+    const searchMatch = pl.photo.match(/검색:\s*(.+)/);
+    const searchTerms = searchMatch ? searchMatch[1].trim() : pl.kor;
+    linkUrl = 'https://bibleland.net/?s=' + encodeURIComponent(searchTerms);
+    linkText = '📷 ' + pl.photo;
+  }
+  const maxWidth = isMobileDevice ? 260 : 310;
+  return `
+    <div class="popup-title">
+      <span class="popup-num" style="background:${pl.color};color:#fff;border-radius:50%;width:22px;height:22px;display:inline-flex;align-items:center;justify-content:center;font-size:11px;">${numDisplay}</span>
+      ${pl.kor} <span style="font-size:0.8em;color:#888;">(${pl.nameEn})</span>
+    </div>
+    <div class="popup-verse">📖 ${pl.verse}</div>
+    <div class="popup-desc">${pl.desc}</div>
+    <div class="popup-photo"><a href="${linkUrl}" target="_blank" style="color:#4dd0e1;text-decoration:none;">${linkText}</a></div>
+  `;
+}
+
+function buildRouteMarkers(routeKey) {
+  const grp = L.layerGroup();
+  const order = routeOrder[routeKey];
+  if (!order) return grp;
+  const color = COLORS[routeKey];
+  const visited = new Set();
+  let seqNum = 0;
+  order.forEach((plId) => {
+    if (visited.has(plId)) return;
+    visited.add(plId);
+    const pl = placeById[plId];
+    if (!pl) return;
+    seqNum++;
+    const icon = makePlaceIcon(seqNum, pl.kor, color, pl.big);
+    const m = L.marker(pl.latlng, { icon });
+    const label = (seqNum >= 1 && seqNum <= 30) ? circledNums[seqNum - 1] : seqNum;
+    m.bindPopup(makePopup(pl, label), { maxWidth: isMobileDevice ? 260 : 310 });
+    grp.addLayer(m);
+  });
+  return grp;
+}
+
+function buildAllPlacesGroup() {
+  const grp = L.layerGroup();
+  places.forEach(pl => {
+    const icon = makeDotIcon(pl.kor, pl.color, pl.big);
+    const m = L.marker(pl.latlng, { icon });
+    m.bindPopup(makePopup(pl), { maxWidth: isMobileDevice ? 260 : 310 });
+    grp.addLayer(m);
+  });
+  return grp;
+}
+
+const allPlacesGroup = buildAllPlacesGroup();
+
+const routeKeys = ['calling','paul1','paul2','paul3','paul4','philip','peter'];
+routeKeys.forEach(key => {
+  spotGroups[key] = buildRouteMarkers(key);
+});
+spotGroups.common = L.layerGroup();
+
+let currentMarkerMode = 'dots';
+
+// ============================================================
+// 경로 라인
+// ============================================================
+const routeStyles = {
+  calling: { color: '#FF6D00', weight: 3.5, dashArray: '6,4' },
+  paul1:   { color: '#FF3D00', weight: 3.5, dashArray: null },
+  paul2:   { color: '#00E5FF', weight: 3.5, dashArray: null },
+  paul3:   { color: '#00E676', weight: 3.5, dashArray: null },
+  paul4:   { color: '#D500F9', weight: 3.5, dashArray: '9,5' },
+  philip:  { color: '#FFD600', weight: 3.5, dashArray: null },
+  peter:   { color: '#FF4081', weight: 3.5, dashArray: null }
+};
+
+const routeDefs = {};
+Object.keys(routeStyles).forEach(key => {
+  const style = routeStyles[key];
+  const coords = routeOrder[key].map(id => {
+    const pl = placeById[id];
+    return pl ? pl.latlng : null;
+  }).filter(c => c !== null);
+  routeDefs[key] = { color: style.color, weight: style.weight, dashArray: style.dashArray, coords };
+});
+
+const routeLineLayers = {};
+const activeItems = { calling:false, paul1:false, paul2:false, paul3:false, paul4:false, philip:false, peter:false, common:false };
+
+function buildArrow(coords, color) {
+  const mid = Math.floor(coords.length / 2);
+  if (mid < 1) return null;
+  const p1 = coords[mid - 1], p2 = coords[mid];
+  const angle = Math.atan2(p2[1] - p1[1], p2[0] - p1[0]) * 180 / Math.PI;
+  const lat = (p1[0] + p2[0]) / 2, lng = (p1[1] + p2[1]) / 2;
+  return L.marker([lat, lng], {
+    icon: L.divIcon({
+      html: `<div style="color:${color};font-size:20px;transform:rotate(${angle}deg);line-height:1;pointer-events:none;">➤</div>`,
+      className: '', iconSize: [22, 22], iconAnchor: [11, 11]
+    }),
+    interactive: false
+  });
+}
+
+Object.keys(routeDefs).forEach(key => {
+  const d = routeDefs[key];
+  const grp = L.layerGroup();
+  grp.addLayer(L.polyline(d.coords, { color: d.color, weight: d.weight, dashArray: d.dashArray, opacity: 0.9 }));
+  const arrow = buildArrow(d.coords, d.color);
+  if (arrow) grp.addLayer(arrow);
+  routeLineLayers[key] = grp;
+});
+
+// ============================================================
+// 보기 모드
+// ============================================================
+let currentViewMode = 'spot';
+
+function refreshMarkers() {
+  const activeRoutes = routeKeys.filter(k => activeItems[k]);
+
+  map.removeLayer(allPlacesGroup);
+  routeKeys.forEach(key => map.removeLayer(spotGroups[key]));
+  map.removeLayer(spotGroups.common);
+
+  if (activeRoutes.length === 1) {
+    currentMarkerMode = 'numbered';
+    spotGroups[activeRoutes[0]].addTo(map);
+  } else if (activeRoutes.length === 0) {
+    currentMarkerMode = 'dots';
+  } else {
+    currentMarkerMode = 'dots';
+    allPlacesGroup.addTo(map);
+  }
+}
+
+function setViewMode(mode) {
+  currentViewMode = mode;
+  const hint = document.getElementById('modeHint');
+  const hintMobile = document.getElementById('modeHintMobile');
+  const btnRoute = document.getElementById('modeRouteBtn');
+  const btnSpot = document.getElementById('modeSpotBtn');
+  const btnRouteMobile = document.getElementById('modeRouteBtnMobile');
+  const btnSpotMobile = document.getElementById('modeSpotBtnMobile');
+  const commonItem = document.getElementById('commonItem');
+  const commonItemMobile = document.getElementById('commonItemMobile');
+
+  routeKeys.forEach(key => {
+    if (mode === 'route' && activeItems[key]) { routeLineLayers[key].addTo(map); }
+    else { map.removeLayer(routeLineLayers[key]); }
+  });
+
+  refreshMarkers();
+
+  if (mode === 'route') {
+    if (commonItem) commonItem.style.display = 'none';
+    if (commonItemMobile) commonItemMobile.style.display = 'none';
+    if (hint) hint.textContent = '이동 경로를 선으로 표시합니다. 개별 경로를 켜고 끌 수 있습니다.';
+    if (hintMobile) hintMobile.textContent = '이동 경로를 선으로 표시합니다. 개별 경로를 켜고 끌 수 있습니다.';
+    if (btnRoute) btnRoute.classList.add('active');
+    if (btnSpot) btnSpot.classList.remove('active');
+    if (btnRouteMobile) btnRouteMobile.classList.add('active');
+    if (btnSpotMobile) btnSpotMobile.classList.remove('active');
+  } else {
+    if (commonItem) commonItem.style.display = 'flex';
+    if (commonItemMobile) commonItemMobile.style.display = 'flex';
+    if (hint) hint.textContent = '전체 57개 지명을 지도에 표시합니다.';
+    if (hintMobile) hintMobile.textContent = '전체 57개 지명을 지도에 표시합니다.';
+    if (btnRoute) btnRoute.classList.remove('active');
+    if (btnSpot) btnSpot.classList.add('active');
+    if (btnRouteMobile) btnRouteMobile.classList.remove('active');
+    if (btnSpotMobile) btnSpotMobile.classList.add('active');
+  }
+
+  Object.keys(activeItems).forEach(key => {
+    const btn = document.getElementById('tog-' + key);
+    const btnMobile = document.getElementById('tog-' + key + '-m');
+    if (btn) { activeItems[key] ? btn.classList.add('on') : btn.classList.remove('on'); }
+    if (btnMobile) { activeItems[key] ? btnMobile.classList.add('on') : btnMobile.classList.remove('on'); }
+  });
+}
+
+function toggleItem(key, btn) {
+  if (activeItems[key]) {
+    if (routeLineLayers[key]) { map.removeLayer(routeLineLayers[key]); }
+    activeItems[key] = false;
+    btn.classList.remove('on');
+  } else {
+    if (currentViewMode === 'route' && routeLineLayers[key]) {
+      routeLineLayers[key].addTo(map);
+    }
+    activeItems[key] = true;
+    btn.classList.add('on');
+  }
+  refreshMarkers();
+}
+
+function resetAll() {
+  Object.keys(activeItems).forEach(key => { activeItems[key] = false; });
+  routeKeys.forEach(key => { if (routeLineLayers[key]) map.removeLayer(routeLineLayers[key]); });
+  map.removeLayer(allPlacesGroup);
+  routeKeys.forEach(key => map.removeLayer(spotGroups[key]));
+  map.removeLayer(spotGroups.common);
+  Object.keys(activeItems).forEach(key => {
+    const btn = document.getElementById('tog-' + key);
+    const btnMobile = document.getElementById('tog-' + key + '-m');
+    if (btn) btn.classList.remove('on');
+    if (btnMobile) btnMobile.classList.remove('on');
+  });
+  map.fitBounds([[28.0, 10.0], [42.0, 45.0]]);
+
+  setViewMode('spot');
+
+  if (isMobileDevice) {
+    const sheet = document.getElementById('bottomSheet');
+    const dragLabel = document.querySelector('.drag-label');
+    if (sheet) sheet.classList.remove('mid', 'full');
+    if (dragLabel) dragLabel.textContent = '경로 설정 ▲';
+  }
+}
+
+// ============================================================
+// 아코디언 토글
+// ============================================================
+function toggleAccordion(name) {
+  const header = document.getElementById(name + 'Header');
+  const body = document.getElementById(name + 'Body');
+  if (header) header.classList.toggle('open');
+  if (body) body.classList.toggle('open');
+}
+
+// ============================================================
+// 모바일 터치 핸들러
+// ============================================================
+if (isMobileDevice) {
+  const sheet = document.getElementById('bottomSheet');
+  const handle = document.getElementById('dragHandle');
+  const dragLabel = document.querySelector('.drag-label');
+  let sheetState = 'closed';
+
+  if (handle) {
+    handle.addEventListener('click', function() {
+      if (sheetState === 'closed') { sheet.classList.add('mid'); sheet.classList.remove('full'); sheetState = 'mid'; dragLabel.textContent = '▼ 닫기'; }
+      else if (sheetState === 'mid') { sheet.classList.remove('mid'); sheet.classList.add('full'); sheetState = 'full'; dragLabel.textContent = '▼ 닫기'; }
+      else { sheet.classList.remove('mid', 'full'); sheetState = 'closed'; dragLabel.textContent = '경로 설정 ▲'; }
+    });
+
+    let startY = 0, currentTranslateY = 0, isDragging = false;
+
+    handle.addEventListener('touchstart', function(e) {
+      startY = e.touches[0].clientY;
+      const rect = sheet.getBoundingClientRect();
+      currentTranslateY = rect.top - (window.innerHeight - sheet.offsetHeight);
+      sheet.style.transition = 'none';
+      isDragging = true;
+    }, { passive: true });
+
+    handle.addEventListener('touchmove', function(e) {
+      if (!isDragging) return;
+      e.preventDefault();
+      const dy = e.touches[0].clientY - startY;
+      const maxT = sheet.offsetHeight - 56;
+      const newT = Math.max(0, Math.min(maxT, currentTranslateY + dy));
+      sheet.style.transform = `translateY(${newT}px)`;
+    }, { passive: false });
+
+    handle.addEventListener('touchend', function(e) {
+      if (!isDragging) return;
+      isDragging = false;
+      sheet.style.transition = 'transform 0.35s cubic-bezier(0.4, 0, 0.2, 1)';
+      const rect = sheet.getBoundingClientRect();
+      const visible = window.innerHeight - rect.top;
+      const total = sheet.offsetHeight;
+      const ratio = visible / total;
+
+      sheet.style.transform = '';
+      if (ratio > 0.6) {
+        sheet.classList.add('full'); sheet.classList.remove('mid');
+        sheetState = 'full'; dragLabel.textContent = '▼ 닫기';
+      } else if (ratio > 0.2) {
+        sheet.classList.add('mid'); sheet.classList.remove('full');
+        sheetState = 'mid'; dragLabel.textContent = '▼ 닫기';
+      } else {
+        sheet.classList.remove('mid', 'full');
+        sheetState = 'closed'; dragLabel.textContent = '경로 설정 ▲';
+      }
+    }, { passive: true });
+  }
+
+  map.on('click', function() {
+    if (sheetState !== 'closed') {
+      sheet.classList.remove('mid', 'full');
+      sheetState = 'closed';
+      dragLabel.textContent = '경로 설정 ▲';
+    }
+  });
+
+  function fixIOSHeight() {
+    const vh = window.innerHeight * 0.01;
+    document.documentElement.style.setProperty('--vh', vh + 'px');
+    setTimeout(function() { map.invalidateSize(); }, 100);
+  }
+  window.addEventListener('resize', fixIOSHeight);
+  window.addEventListener('orientationchange', function() { setTimeout(fixIOSHeight, 300); });
+  fixIOSHeight();
+}
+
+// ============================================================
+// 초기화: 지명 모드(spot)로 시작
+// ============================================================
+map.fitBounds([[28.0, 10.0], [42.0, 45.0]]);
+setViewMode('spot');
+</script>
+</body>
+</html>
