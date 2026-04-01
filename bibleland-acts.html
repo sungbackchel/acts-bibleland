@@ -273,7 +273,7 @@
           <span class="mode-icon">↝</span> 경로
         </button>
       </div>
-      <p class="mode-hint" id="modeHint">전체 57개 지명을 지도에 표시합니다.</p>
+      <p class="mode-hint" id="modeHint">전체 68개 지명을 지도에 표시합니다.</p>
 
       <!-- ▼ 통합 토글 목록 ▼ -->
       <div id="itemToggles">
@@ -297,7 +297,7 @@
           <div class="route-color" style="background:#00E5FF"></div>
           <div class="route-info">
             <div class="route-name">바울 제2차 전도여행</div>
-            <div class="route-desc">행 15:36–18:22 | 안디옥→마게도냐→그리스→안디옥</div>
+            <div class="route-desc">행 15:36–18:22 | 안디옥→마게도냐→아가야→안디옥</div>
           </div>
           <button class="route-toggle" id="tog-paul2" onclick="toggleItem('paul2', this)"></button>
         </div>
@@ -305,7 +305,7 @@
           <div class="route-color" style="background:#00E676"></div>
           <div class="route-info">
             <div class="route-name">바울 제3차 전도여행</div>
-            <div class="route-desc">행 18:23–21:17 | 안디옥→에베소→마게도냐→예루살렘</div>
+            <div class="route-desc">행 18:23–21:17 | 안디옥→에베소→마게도냐→헬라→예루살렘</div>
           </div>
           <button class="route-toggle" id="tog-paul3" onclick="toggleItem('paul3', this)"></button>
         </div>
@@ -333,13 +333,13 @@
           </div>
           <button class="route-toggle" id="tog-peter" onclick="toggleItem('peter', this)"></button>
         </div>
-        <div class="route-item" id="commonItem" style="display:none;">
+        <div class="route-item" id="commonItem">
           <div class="route-color" style="background:#FF1744"></div>
           <div class="route-info">
-            <div class="route-name">공통·주요 지명</div>
-            <div class="route-desc">예루살렘, 다메섹, 가이사랴 등</div>
+            <div class="route-name">모든 지명</div>
+            <div class="route-desc">전체 68개 지명 표시</div>
           </div>
-          <button class="route-toggle" id="tog-common" onclick="toggleItem('common', this)"></button>
+          <button class="route-toggle on" id="tog-common" onclick="toggleItem('common', this)"></button>
         </div>
       </div>
     </div>
@@ -402,7 +402,7 @@
       <div class="accordion-body" id="statBody">
         <div class="stat-grid">
           <div class="stat-item"><div class="stat-num">28</div><div class="stat-label">장(章)</div></div>
-          <div class="stat-item"><div class="stat-num">59</div><div class="stat-label">등장 지명</div></div>
+          <div class="stat-item"><div class="stat-num">68</div><div class="stat-label">등장 지명</div></div>
           <div class="stat-item"><div class="stat-num">7</div><div class="stat-label">인물 경로</div></div>
           <div class="stat-item"><div class="stat-num">4</div><div class="stat-label">바울 여행</div></div>
         </div>
@@ -434,7 +434,7 @@
             <span class="mode-icon">↝</span> 경로
           </button>
         </div>
-        <p class="mode-hint" id="modeHintMobile">전체 57개 지명을 지도에 표시합니다.</p>
+        <p class="mode-hint" id="modeHintMobile">전체 68개 지명을 지도에 표시합니다.</p>
 
         <div id="itemTogglesMobile">
           <div class="route-item">
@@ -568,7 +568,7 @@
         <div class="accordion-body" id="statMBody">
           <div class="stat-grid">
             <div class="stat-item"><div class="stat-num">28</div><div class="stat-label">장(章)</div></div>
-            <div class="stat-item"><div class="stat-num">59</div><div class="stat-label">등장 지명</div></div>
+            <div class="stat-item"><div class="stat-num">68</div><div class="stat-label">등장 지명</div></div>
             <div class="stat-item"><div class="stat-num">7</div><div class="stat-label">인물 경로</div></div>
             <div class="stat-item"><div class="stat-num">4</div><div class="stat-label">바울 여행</div></div>
           </div>
@@ -641,72 +641,81 @@ const COLORS = {
 
 const places = [
   { id:'jerusalem',    num:1,  kor:'예루살렘',        nameEn:'Jerusalem',         color:COLORS.important, big:true,  latlng:[31.778,35.235], verse:'행 1:4; 2:5; 등', desc:'사도행전 전체의 출발점. 오순절 성령 강림의 현장이며, 초대교회가 시작된 성도. 다윗이 건설하고 솔로몬이 성전을 세운 이스라엘의 수도로, 해발 약 754m 고지에 위치한다.', photo:'bibleland.net/category/bibleland/israel-palestine/jerusalem-israel-palestinian' },
-  { id:'olives',       num:2,  kor:'감람산',           nameEn:'Mount of Olives',   color:COLORS.neutral,   big:false, latlng:[31.776,35.244], verse:'행 1:12', desc:'예루살렘 동쪽 기드론 골짜기 건너편 산. 예수께서 승천하신 장소로 기록되어 있다(행 1:12). 겟세마네 동산이 산기슭에 위치하며, 예루살렘에서 안식일 길(약 1km) 거리다.', photo:'검색: 감람산 올리브산' },
-  { id:'antioch_s',   num:3,  kor:'수리아 안디옥',    nameEn:'Antioch (Syria)',   color:COLORS.paul1,     big:true,  latlng:[36.203,36.156], verse:'행 11:26; 13:1; 14:26', desc:'오론테스 강변 로마 제국 제3의 도시. 제자들이 처음으로 "그리스도인"이라 불린 곳이며(행 11:26), 바울의 세 차례 전도여행 모두 이곳에서 출발·귀환했다. 현재 튀르키예의 안타키아(Antakya)다.', photo:'검색: 수리아 안디옥' },
-  { id:'seleucia',    num:4,  kor:'실루기아',          nameEn:'Seleucia Pieria',   color:COLORS.paul1,     big:false, latlng:[36.118,35.931], verse:'행 13:4', desc:'수리아 안디옥에서 약 25km 거리 지중해 항구 도시. 바울과 바나바가 제1차 전도여행을 시작하며 배를 탄 곳이다(행 13:4). 셀레우코스 1세가 건설했으며, 현재 튀르키예 사만다으 인근에 유적이 있다.', photo:'검색: 실루기아' },
-  { id:'salamis',     num:5,  kor:'살라미 (구브로)',   nameEn:'Salamis, Cyprus',   color:COLORS.paul1,     big:false, latlng:[35.175,33.88], verse:'행 13:5', desc:'구브로(키프로스) 섬 동쪽 해안의 주요 항구 도시. 바나바의 고향 섬 구브로의 관문으로, 바울과 바나바가 제1차 전도여행에서 첫 번째로 방문한 도시다(행 13:5).', photo:'검색: 살라미 구브로 키프로스' },
-  { id:'paphos',      num:6,  kor:'바보 (구브로)',     nameEn:'Paphos, Cyprus',    color:COLORS.paul1,     big:false, latlng:[34.759,32.414], verse:'행 13:6-12', desc:'구브로 섬 서남단 로마 총독 거점. 총독 서기오 바울로가 믿었고, 마술사 엘루마가 눈이 어두워진 사건이 일어났다(행 13:12). 이곳에서부터 "사울"이 "바울"로 불리기 시작했다.', photo:'bibleland.net/category/bibleland/turkiye/길리기아와수리아-그리고-구브로/파포스_paphos' },
-  { id:'perga',       num:7,  kor:'버가 (밤빌리아)',   nameEn:'Perga, Pamphylia',  color:COLORS.paul1,     big:false, latlng:[36.961,30.853], verse:'행 13:13; 14:25', desc:'소아시아 밤빌리아 지방 내륙 도시. 요한 마가가 바울 일행에서 이탈해 예루살렘으로 돌아간 곳이다(행 13:13). 앗달리아에서 약 12km 내륙에 위치하며 아르테미스 신전으로 유명했다.', photo:'검색: 버가 페르게 밤빌리아' },
-  { id:'antioch_p',  num:8,  kor:'비시디아 안디옥',   nameEn:'Antioch of Pisidia',color:COLORS.paul1,     big:false, latlng:[38.307,31.187], verse:'행 13:14', desc:'소아시아 비시디아 지방 도시로 현재 튀르키예 야르바츠 인근. 바울이 회당에서 구약 역사와 예수의 부활을 논증한 긴 설교를 했다(행 13:16-41). 유대인 반발로 이고니온으로 추방당했다(행 13:50).', photo:'검색: 비시디아 안디옥 야르바츠' },
-  { id:'iconium',    num:9,  kor:'이고니온',           nameEn:'Iconium',           color:COLORS.paul1,     big:false, latlng:[37.871,32.492], verse:'행 13:51; 14:1', desc:'소아시아 도시로 현재 튀르키예 코냐(Konya). 바울과 바나바가 회당에서 전도하여 많은 사람이 믿었으나 박해를 받아 루스드라로 피신했다(행 14:5-6).', photo:'검색: 이고니온 코냐 튀르키예' },
-  { id:'lystra',     num:10, kor:'루스드라',           nameEn:'Lystra',            color:COLORS.paul1,     big:false, latlng:[37.603,32.339], verse:'행 14:6; 16:1', desc:'소아시아 리카오니아 지방 도시. 바울이 앉은뱅이를 치유했고 돌로 맞아 죽은 줄 알았다(행 14:19). 디모데의 고향이기도 하다(행 16:1).', photo:'검색: 루스드라 리스트라 소아시아' },
+  { id:'olives',       num:2,  kor:'감람산',           nameEn:'Mount of Olives',   color:COLORS.neutral,   big:false, latlng:[31.776,35.244], verse:'행 1:12', desc:'예루살렘 동쪽 기드론 골짜기 건너편 산. 예수께서 승천하신 장소로 기록되어 있다(행 1:12). 겟세마네 동산이 산기슭에 위치하며, 예루살렘에서 안식일 길(약 1km) 거리다.', photo:'bibleland.net/?s=감람산' },
+  { id:'antioch_s',   num:3,  kor:'수리아 안디옥',    nameEn:'Antioch (Syria)',   color:COLORS.paul1,     big:true,  latlng:[36.203,36.156], verse:'행 11:26; 13:1; 14:26', desc:'오론테스 강변 로마 제국 제3의 도시. 제자들이 처음으로 "그리스도인"이라 불린 곳이며(행 11:26), 바울의 세 차례 전도여행 모두 이곳에서 출발·귀환했다. 현재 튀르키예의 안타키아(Antakya)다.', photo:'bibleland.net/?s=안디옥' },
+  { id:'seleucia',    num:4,  kor:'실루기아',          nameEn:'Seleucia Pieria',   color:COLORS.paul1,     big:false, latlng:[36.118,35.931], verse:'행 13:4', desc:'수리아 안디옥에서 약 25km 거리 지중해 항구 도시. 바울과 바나바가 제1차 전도여행을 시작하며 배를 탄 곳이다(행 13:4). 셀레우코스 1세가 건설했으며, 현재 튀르키예 사만다으 인근에 유적이 있다.', photo:'bibleland.net/?s=실루기아' },
+  { id:'salamis',     num:5,  kor:'살라미 (구브로)',   nameEn:'Salamis, Cyprus',   color:COLORS.paul1,     big:false, latlng:[35.175,33.88], verse:'행 13:5', desc:'구브로(키프로스) 섬 동쪽 해안의 주요 항구 도시. 바나바의 고향 섬 구브로의 관문으로, 바울과 바나바가 제1차 전도여행에서 첫 번째로 방문한 도시다(행 13:5).', photo:'bibleland.net/?s=살라미' },
+  { id:'paphos',      num:6,  kor:'바보 (구브로)',     nameEn:'Paphos, Cyprus',    color:COLORS.paul1,     big:false, latlng:[34.759,32.414], verse:'행 13:6-12', desc:'구브로 섬 서남단 로마 총독 거점. 총독 서기오 바울이 믿었고, 마술사 엘루마가 눈이 어두워진 사건이 일어났다(행 13:12). 이곳에서부터 "사울"이 "바울"로 불리기 시작했다.', photo:'bibleland.net/category/bibleland/turkiye/길리기아와수리아-그리고-구브로/파포스_paphos' },
+  { id:'perga',       num:7,  kor:'버가 (밤빌리아)',   nameEn:'Perga, Pamphylia',  color:COLORS.paul1,     big:false, latlng:[36.961,30.853], verse:'행 13:13; 14:25', desc:'소아시아 밤빌리아 지방 내륙 도시. 요한 마가가 바울 일행에서 이탈해 예루살렘으로 돌아간 곳이다(행 13:13). 앗달리아에서 약 12km 내륙에 위치하며 아데미 신전으로 유명했다.', photo:'bibleland.net/?s=버가' },
+  { id:'antioch_p',  num:8,  kor:'비시디아 안디옥',   nameEn:'Antioch of Pisidia',color:COLORS.paul1,     big:false, latlng:[38.307,31.187], verse:'행 13:14', desc:'소아시아 비시디아 지방 도시로 현재 튀르키예 야르바츠 인근. 바울이 회당에서 구약 역사와 예수의 부활을 논증한 긴 설교를 했다(행 13:16-41). 유대인 반발로 이고니온으로 추방당했다(행 13:50).', photo:'bibleland.net/?s=비시디아 안디옥' },
+  { id:'iconium',    num:9,  kor:'이고니온',           nameEn:'Iconium',           color:COLORS.paul1,     big:false, latlng:[37.871,32.492], verse:'행 13:51; 14:1', desc:'소아시아 도시로 현재 튀르키예 코냐(Konya). 바울과 바나바가 회당에서 전도하여 많은 사람이 믿었으나 박해를 받아 루스드라로 피신했다(행 14:5-6).', photo:'bibleland.net/?s=이고니온' },
+  { id:'lystra',     num:10, kor:'루스드라',           nameEn:'Lystra',            color:COLORS.paul1,     big:false, latlng:[37.603,32.339], verse:'행 14:6; 16:1', desc:'소아시아 리카오니아 지방 도시. 바울이 앉은뱅이를 치유했고 돌로 맞아 죽은 줄 알았다(행 14:19). 디모데의 고향이기도 하다(행 16:1).', photo:'bibleland.net/?s=루스드라' },
   { id:'derbe',      num:11, kor:'더베',               nameEn:'Derbe',             color:COLORS.paul1,     big:false, latlng:[37.351,33.361], verse:'행 14:20; 16:1', desc:'리카오니아 지방 도시로 현재 튀르키예 케르티 회육 인근. 바울이 루스드라에서 돌에 맞은 후 이튿날 이곳으로 이동해 많은 제자를 삼았다(행 14:20-21). 가이오의 고향이다(행 20:4).', photo:'bibleland.net/category/bibleland/turkiye/갈라디아/더베_에키노주_ekinozu' },
-  { id:'attalia',    num:12, kor:'앗달리아',           nameEn:'Attalia (Antalya)', color:COLORS.paul1,     big:false, latlng:[36.885,30.701], verse:'행 14:25', desc:'밤빌리아 지방 지중해 해안 항구 도시. 바울과 바나바가 제1차 전도여행을 마치고 귀환하며 승선한 항구다(행 14:25-26). 아탈로스 2세가 건설했으며 현재 튀르키예 안탈리아(Antalya)다.', photo:'bibleland.net/category/bibleland/turkiye/4-루기아와-밤빌리아/앗달리아_antalya' },
-  { id:'tarsus',     num:13, kor:'다소',               nameEn:'Tarsus',            color:COLORS.paul2,     big:false, latlng:[36.919,34.894], verse:'행 9:11; 21:39; 22:3', desc:'길리기아 지방 도시로 바울의 출생지(행 22:3). 로마 속주 길리기아의 수도였으며 스토아 철학의 영향이 강한 학문 도시였다. 현재 튀르키예 메르신 주에 위치한다.', photo:'bibleland.net/category/bibleland/turkiye/길리기아와수리아-그리고-구브로/다소_tarsus' },
-  { id:'damascus',   num:14, kor:'다메섹',             nameEn:'Damascus',          color:COLORS.neutral,   big:true,  latlng:[33.513,36.307], verse:'행 9:2; 22:6', desc:'수리아(시리아)의 수도. 바울이 그리스도인을 잡으러 가던 도중 부활하신 예수를 만나 회심한 역사적 장소다(행 9:3-9). 아나니아를 통해 세례를 받고 사역을 시작했다(행 9:17-19).', photo:'검색: 다마스쿠스 다메섹 시리아' },
-  { id:'lydda',      num:15, kor:'룻다',               nameEn:'Lydda (Lod)',       color:COLORS.peter,     big:false, latlng:[31.951,34.895], verse:'행 9:32', desc:'유대 평야 도시로 현재 이스라엘의 롯(Lod). 베드로가 8년간 중풍으로 누워 있던 애니아를 치유한 곳이다(행 9:33-34). 이 기적으로 사론 평야 주민 다수가 회심했다.', photo:'검색: 룻다 롯 이스라엘' },
-  { id:'sharon',     num:16, kor:'사론 평야',           nameEn:'Plain of Sharon',   color:COLORS.peter,     big:false, latlng:[32.222,34.871], verse:'행 9:35', desc:'지중해 연안을 따라 남북으로 약 80km 펼쳐진 해안 평야. 베드로의 룻다 치유 기적 소문으로 "사론에 사는 사람들도 다 주께로 돌아오더라"고 기록된다(행 9:35).', photo:'검색: 사론 평야 이스라엘' },
-  { id:'joppa',      num:17, kor:'욥바',               nameEn:'Joppa (Jaffa)',     color:COLORS.peter,     big:false, latlng:[32.053,34.751], verse:'행 9:36; 10:5', desc:'지중해 해안 고대 항구 도시로 현재 이스라엘 텔아비브-야파 구시가. 베드로가 다비다를 살린 곳이며(행 9:40), 옥상 기도 중 이방인 음식 환상을 받아 고넬료에게 파송된 곳이다(행 10:9-16).', photo:'검색: 욥바 야파 항구 이스라엘' },
+  { id:'attalia',    num:12, kor:'앗달리아',           nameEn:'Attalia (Antalya)', color:COLORS.paul1,     big:false, latlng:[36.885,30.701], verse:'행 14:25', desc:'밤빌리아 지방 지중해 해안 항구 도시. 바울과 바나바가 제1차 전도여행을 마치고 귀환하며 승선한 항구다(행 14:25-26). 아탈로스 2세가 건설했으며 현재 튀르키예 안탈리아(Antalya)다.', photo:'bibleland.net/?s=앗달리아' },
+  { id:'tarsus',     num:13, kor:'다소',               nameEn:'Tarsus',            color:COLORS.paul2,     big:false, latlng:[36.919,34.894], verse:'행 9:11; 21:39; 22:3', desc:'길리기아 지방 도시로 바울의 출생지(행 22:3). 로마 속주 길리기아의 수도였으며 스도아 철학의 영향이 강한 학문 도시였다. 현재 튀르키예 메르신 주에 위치한다.', photo:'bibleland.net/category/bibleland/turkiye/길리기아와수리아-그리고-구브로/다소_tarsus' },
+  { id:'damascus',   num:14, kor:'다메섹',             nameEn:'Damascus',          color:COLORS.neutral,   big:true,  latlng:[33.513,36.307], verse:'행 9:2; 22:6', desc:'수리아(시리아)의 수도. 바울이 그리스도인을 잡으러 가던 도중 부활하신 예수를 만나 회심한 역사적 장소다(행 9:3-9). 아나니아를 통해 세례를 받고 사역을 시작했다(행 9:17-19).', photo:'bibleland.net/?s=다메섹' },
+  { id:'lydda',      num:15, kor:'룻다',               nameEn:'Lydda (Lod)',       color:COLORS.peter,     big:false, latlng:[31.951,34.895], verse:'행 9:32', desc:'유대 평야 도시로 현재 이스라엘의 롯(Lod). 베드로가 8년간 중풍으로 누워 있던 애니아를 치유한 곳이다(행 9:33-34). 이 기적으로 사론 평야 주민 다수가 회심했다.', photo:'bibleland.net/?s=룻다' },
+  { id:'sharon',     num:16, kor:'사론 평야',           nameEn:'Plain of Sharon',   color:COLORS.peter,     big:false, latlng:[32.222,34.871], verse:'행 9:35', desc:'지중해 연안을 따라 남북으로 약 80km 펼쳐진 해안 평야. 베드로의 룻다 치유 기적 소문으로 "사론에 사는 사람들도 다 주께로 돌아오더라"고 기록된다(행 9:35).', photo:'bibleland.net/?s=사론' },
+  { id:'joppa',      num:17, kor:'욥바',               nameEn:'Joppa (Jaffa)',     color:COLORS.peter,     big:false, latlng:[32.053,34.751], verse:'행 9:36; 10:5', desc:'지중해 해안 고대 항구 도시로 현재 이스라엘 텔아비브-야파 구시가. 베드로가 다비다를 살린 곳이며(행 9:40), 옥상 기도 중 이방인 음식 환상을 받아 고넬료에게 파송된 곳이다(행 10:9-16).', photo:'bibleland.net/?s=욥바' },
   { id:'caesarea',   num:18, kor:'가이사랴',           nameEn:'Caesarea Maritima', color:COLORS.important, big:true,  latlng:[32.497,34.889], verse:'행 8:40; 10:1; 18:22; 21:8; 23:23', desc:'헤롯 대왕이 건설한 지중해 해안 도시로 유대 총독 행정 수도. 고넬료의 집이 있어 이방인 최초 성령 임재가 일어난 곳이다(행 10:1). 빌립과 바울 모두 이곳을 거점으로 활동했다.', photo:'bibleland.net/category/bibleland/israel-palestine/mediterranean-sea/caesarea' },
   { id:'samaria',    num:19, kor:'사마리아',           nameEn:'Samaria',           color:COLORS.philip,    big:false, latlng:[32.277,35.193], verse:'행 8:1,5,14', desc:'유대 북쪽 혼혈 사마리아인 거주 지역. 스데반 순교 후 핍박을 피해 흩어진 그리스도인들이 이곳에 복음을 전했다(행 8:1). 빌립이 전도하여 큰 기쁨이 있었고 베드로·요한도 방문했다(행 8:14).', photo:'bibleland.net/category/bibleland/israel-palestine/samarita/samaria-sebaste' },
-  { id:'gaza',       num:20, kor:'가사 (광야 길)',      nameEn:'Gaza Road',         color:COLORS.philip,    big:false, latlng:[31.501,34.466], verse:'행 8:26', desc:'예루살렘에서 남서쪽으로 내려가는 광야 길로 국제 통상로. 천사가 빌립에게 이 길로 가라 명하여 에디오피아 내시를 만나 이사야서 53장을 설명하고 세례를 베풀었다(행 8:26-38).', photo:'검색: 가사 광야 길' },
-  { id:'azotus',     num:21, kor:'아소도',             nameEn:'Azotus (Ashdod)',   color:COLORS.philip,    big:false, latlng:[31.824,34.656], verse:'행 8:40', desc:'블레셋 옛 성읍으로 현재 이스라엘 아쉬도드. 빌립이 에디오피아 내시에게 세례 후 성령에 이끌려 갑자기 나타난 곳이다(행 8:40). 이곳에서 가이사랴까지 해안 도시들을 따라 전도하며 이동했다.', photo:'검색: 아소도 아쉬도드 이스라엘' },
-  { id:'tyre',       num:22, kor:'두로',               nameEn:'Tyre',              color:COLORS.paul3,     big:false, latlng:[33.272,35.196], verse:'행 21:3', desc:'레바논 해안 고대 페니키아 도시. 바울이 3차 전도여행 귀환 시 7일 머문 곳으로(행 21:4), 성도들이 성령의 감동으로 예루살렘에 가지 말라 권고했다. 현재 레바논의 티르(Tyre/Sour)다.', photo:'검색: 두로 티르 레바논' },
-  { id:'ptolemais',  num:23, kor:'돌레마이',           nameEn:'Ptolemais (Akko)',  color:COLORS.paul3,     big:false, latlng:[32.923,35.069], verse:'행 21:7', desc:'갈멜 산 북쪽 해안 항구로 현재 이스라엘 아코(Akko/Acre). 바울이 두로에서 가이사랴로 이동하며 형제들을 만나 하루 머문 곳이다(행 21:7). 유네스코 세계문화유산이다.', photo:'검색: 돌레마이' },
-  { id:'troas',      num:24, kor:'드로아',             nameEn:'Troas',             color:COLORS.paul2,     big:true,  latlng:[39.759,26.139], verse:'행 16:8; 20:5', desc:'소아시아 북서쪽 미시아 해안 도시. 바울이 마게도냐 환상을 받고 유럽으로 건너가기로 결정한 곳이다(행 16:9-10). 3차 전도여행에서 유두고를 살린 사건도 이곳에서 일어났다(행 20:9).', photo:'검색: 드로아 트로아스 소아시아' },
-  { id:'neapolis',   num:25, kor:'네압볼리',           nameEn:'Neapolis (Kavala)', color:COLORS.paul2,     big:false, latlng:[40.939,24.414], verse:'행 16:11', desc:'마게도냐 항구 도시로 바울이 유럽에 처음 발을 디딘 상륙지(행 16:11). 빌립보의 외항 역할을 했으며 현재 그리스의 카발라(Kavala)다.', photo:'검색: 네압볼리' },
+  { id:'gaza',       num:20, kor:'가사 (광야 길)',      nameEn:'Gaza Road',         color:COLORS.philip,    big:false, latlng:[31.501,34.466], verse:'행 8:26', desc:'예루살렘에서 남서쪽으로 내려가는 광야 길로 국제 통상로. 천사가 빌립에게 이 길로 가라 명하여 에디오피아 내시를 만나 이사야서 53장을 설명하고 세례를 베풀었다(행 8:26-38).', photo:'bibleland.net/?s=가사' },
+  { id:'azotus',     num:21, kor:'아소도',             nameEn:'Azotus (Ashdod)',   color:COLORS.philip,    big:false, latlng:[31.824,34.656], verse:'행 8:40', desc:'블레셋 옛 성읍으로 현재 이스라엘 아쉬도드. 빌립이 에디오피아 내시에게 세례 후 성령에 이끌려 갑자기 나타난 곳이다(행 8:40). 이곳에서 가이사랴까지 해안 도시들을 따라 전도하며 이동했다.', photo:'bibleland.net/?s=아소도' },
+  { id:'tyre',       num:22, kor:'두로',               nameEn:'Tyre',              color:COLORS.paul3,     big:false, latlng:[33.272,35.196], verse:'행 21:3', desc:'레바논 해안 고대 페니키아 도시. 바울이 3차 전도여행 귀환 시 7일 머문 곳으로(행 21:4), 성도들이 성령의 감동으로 예루살렘에 가지 말라 권고했다. 현재 레바논의 티르(Tyre/Sour)다.', photo:'bibleland.net/?s=두로' },
+  { id:'ptolemais',  num:23, kor:'돌레마이',           nameEn:'Ptolemais (Akko)',  color:COLORS.paul3,     big:false, latlng:[32.923,35.069], verse:'행 21:7', desc:'갈멜 산 북쪽 해안 항구로 현재 이스라엘 아코(Akko/Acre). 바울이 두로에서 가이사랴로 이동하며 형제들을 만나 하루 머문 곳이다(행 21:7). 유네스코 세계문화유산이다.', photo:'bibleland.net/?s=돌레마이' },
+  { id:'troas',      num:24, kor:'드로아',             nameEn:'Troas',             color:COLORS.paul2,     big:true,  latlng:[39.759,26.139], verse:'행 16:8; 20:5', desc:'소아시아 북서쪽 미시아 해안 도시. 바울이 마게도냐 환상을 받고 유럽으로 건너가기로 결정한 곳이다(행 16:9-10). 3차 전도여행에서 유두고를 살린 사건도 이곳에서 일어났다(행 20:9).', photo:'bibleland.net/?s=드로아' },
+  { id:'neapolis',   num:25, kor:'네압볼리',           nameEn:'Neapolis (Kavala)', color:COLORS.paul2,     big:false, latlng:[40.939,24.414], verse:'행 16:11', desc:'마게도냐 항구 도시로 바울이 유럽에 처음 발을 디딘 상륙지(행 16:11). 빌립보의 외항 역할을 했으며 현재 그리스의 카발라(Kavala)다.', photo:'bibleland.net/?s=네압볼리' },
   { id:'philippi',   num:26, kor:'빌립보',             nameEn:'Philippi',          color:COLORS.paul2,     big:true,  latlng:[41.014,24.287], verse:'행 16:12', desc:'마게도냐 제1 성읍으로 로마 식민지. 바울이 유럽에서 처음 교회를 세운 역사적 장소로(행 16:12-15), 루디아 회심과 옥수장이 가족 세례가 이곳에서 일어났다. 현재 그리스에 유적이 있다.', photo:'bibleland.net/category/bibleland/그리스_greece/1-마게도냐/빌립보_필리피_philippi' },
-  { id:'amphipolis', num:27, kor:'암비볼리',           nameEn:'Amphipolis',        color:COLORS.paul2,     big:false, latlng:[40.814,23.852], verse:'행 17:1', desc:'마게도냐 스트리몬 강이 돌아 흐르는 곳에 위치한 도시. 바울이 에그나티아 도로를 따라 데살로니가로 가는 도중 통과한 경유지다(행 17:1).', photo:'검색: 암비볼리 에그나티아 도로 그리스' },
-  { id:'apollonia',  num:28, kor:'아볼로니아',         nameEn:'Apollonia',         color:COLORS.paul2,     big:false, latlng:[40.653,23.485], verse:'행 17:1', desc:'마게도냐 에그나티아 도로 위의 도시로 데살로니가에서 약 50km 지점. 바울이 데살로니가로 가는 도중 통과한 역참 도시다(행 17:1).', photo:'검색: 아볼로니아 그리스' },
+  { id:'amphipolis', num:27, kor:'암비볼리',           nameEn:'Amphipolis',        color:COLORS.paul2,     big:false, latlng:[40.814,23.852], verse:'행 17:1', desc:'마게도냐 스트리몬 강이 돌아 흐르는 곳에 위치한 도시. 바울이 에그나티아 도로를 따라 데살로니가로 가는 도중 통과한 경유지다(행 17:1).', photo:'bibleland.net/?s=암비볼리' },
+  { id:'apollonia',  num:28, kor:'아볼로니아',         nameEn:'Apollonia',         color:COLORS.paul2,     big:false, latlng:[40.653,23.485], verse:'행 17:1', desc:'마게도냐 에그나티아 도로 위의 도시로 데살로니가에서 약 50km 지점. 바울이 데살로니가로 가는 도중 통과한 역참 도시다(행 17:1).', photo:'bibleland.net/?s=아볼로니아' },
   { id:'thessalonica',num:29,kor:'데살로니가',         nameEn:'Thessalonica',      color:COLORS.paul2,     big:true,  latlng:[40.633,22.948], verse:'행 17:1', desc:'마게도냐 속주 수도. 바울이 3개 안식일 동안 회당에서 강론하여 교회를 세웠으나 유대인 소동으로 베뢰아로 피신했다(행 17:2-4). 현재 그리스 테살로니키(Thessaloniki)다.', photo:'bibleland.net/category/bibleland/그리스_greece/1-마게도냐/데살로니가_thessalonikis' },
-  { id:'berea',      num:30, kor:'베뢰아',             nameEn:'Berea (Veria)',     color:COLORS.paul2,     big:false, latlng:[40.523,22.201], verse:'행 17:10', desc:'마게도냐 도시. "날마다 성경을 상고하므로" 신사적이라는 칭찬을 받았다(행 17:11). 데살로니가에서 서쪽 약 70km에 위치하며 현재 그리스의 베리아(Veria)다.', photo:'검색: 베뢰아' },
-  { id:'athens',     num:31, kor:'아덴 (아테네)',       nameEn:'Athens',            color:COLORS.paul2,     big:true,  latlng:[37.972,23.724], verse:'행 17:15', desc:'그리스 문명 중심지. 바울이 아레오바고에서 "알지 못하는 신에게" 제단을 근거로 창조주 하나님과 예수의 부활을 선포했다(행 17:22-31). 에피쿠로스·스토아 철학자들과 논쟁했다.', photo:'검색: 아테네 아레오바고 아덴' },
-  { id:'corinth',    num:32, kor:'고린도',             nameEn:'Corinth',           color:COLORS.paul2,     big:true,  latlng:[37.907,22.879], verse:'행 18:1', desc:'그리스 남부 코린토스 지협의 상업 도시. 바울이 약 18개월 체류하며 교회를 세웠다(행 18:11). 아굴라·브리스길라와 함께 천막을 만들며 전도했으며, 총독 갈리오 앞에서 무죄 방면되었다.', photo:'bibleland.net/category/bibleland/그리스_greece/아가야_그레데/고린도_korinthos' },
-  { id:'cenchreae',  num:33, kor:'겐그레아',           nameEn:'Cenchreae',         color:COLORS.paul2,     big:false, latlng:[37.886,22.989], verse:'행 18:18', desc:'고린도 동쪽 에게 해 항구. 바울이 서원을 이행하고 머리를 깎은 곳이다(행 18:18). 뵈뵈가 섬기던 겐그레아 교회가 이곳에 있었다(롬 16:1).', photo:'bibleland.net/category/bibleland/그리스_greece/아가야_그레데/겐그레아_kechries' },
-  { id:'ephesus',    num:34, kor:'에베소',             nameEn:'Ephesus',           color:COLORS.paul2,     big:true,  latlng:[37.941,27.342], verse:'행 18:19; 19:1', desc:'소아시아 에게 해 연안 아시아 속주 수도. 바울이 약 3년 머물며(행 20:31) 두란노 서원에서 강론하여 아시아 전역에 복음이 전파되었다(행 19:10). 아르테미스 신전과 데메드리오의 소동으로 유명하다.', photo:'bibleland.net/category/bibleland/turkiye/아시아무시아/에베소_ephesus' },
-  { id:'miletus',    num:35, kor:'밀레도',             nameEn:'Miletus',           color:COLORS.paul3,     big:true,  latlng:[37.531,27.278], verse:'행 20:15', desc:'소아시아 에게 해 연안 고대 이오니아 도시. 바울이 3차 귀환 시 에베소 장로들을 불러 고별 연설을 한 장소다(행 20:17-38). 무릎 꿇고 기도하며 눈물로 작별한 감동적 장면의 배경이다.', photo:'bibleland.net/category/bibleland/turkiye/아시아무시아/밀레도_miletus' },
-  { id:'assos',      num:36, kor:'앗소',               nameEn:'Assos',             color:COLORS.paul3,     big:false, latlng:[39.491,26.337], verse:'행 20:13', desc:'소아시아 아드라미테 만의 항구 도시. 바울만 도보로 걷고 일행은 배로 이동한 독특한 경로가 기록되어 있다(행 20:13). 현재 튀르키예 베흐람칼레(Behramkale)로, 아테나 신전 유적이 있다.', photo:'bibleland.net/category/bibleland/turkiye/아시아무시아/앗소_assos' },
-  { id:'mytilene',   num:37, kor:'미둘레네',           nameEn:'Mytilene (Lesbos)', color:COLORS.paul3,     big:false, latlng:[39.104,26.555], verse:'행 20:14', desc:'에게 해 레스보스 섬의 주도. 바울이 3차 전도여행 귀환 도중 들른 곳이다(행 20:14). 서정시인 사포의 고향으로 알려진 문화의 섬이다.', photo:'bibleland.net/category/bibleland/그리스_greece/1-마게도냐/미둘레네_mytilene' },
-  { id:'chios',      num:38, kor:'기오',               nameEn:'Chios',             color:COLORS.paul3,     big:false, latlng:[38.372,26.064], verse:'행 20:15', desc:'에게 해 동부 섬. 바울의 귀환 항로상 경유지로 기록되어 있다(행 20:15). 고대에 마스틱 향료 수지로 유명했다.', photo:'검색: 기오 키오스 섬 그리스' },
-  { id:'samos',      num:39, kor:'사모',               nameEn:'Samos',             color:COLORS.paul3,     big:false, latlng:[37.691,26.838], verse:'행 20:15', desc:'소아시아 서안의 섬. 바울의 귀환 항로 경유지다(행 20:15). 수학자 피타고라스의 출생지로 알려진 고대 문명의 섬이다.', photo:'bibleland.net/45616' },
-  { id:'cos',        num:40, kor:'고스',               nameEn:'Cos',               color:COLORS.paul3,     big:false, latlng:[36.894,27.056], verse:'행 21:1', desc:'에게 해 도데카네스 군도의 섬. 로도로 가기 전 경유한 곳이다(행 21:1). 의학의 아버지 히포크라테스의 출생지로 유명하다.', photo:'bibleland.net/category/bibleland/그리스_greece/1-마게도냐/고스_코스_kos' },
+  { id:'berea',      num:30, kor:'베뢰아',             nameEn:'Berea (Veria)',     color:COLORS.paul2,     big:false, latlng:[40.523,22.201], verse:'행 17:10', desc:'마게도냐 도시. "날마다 성경을 상고하므로" 신사적이라는 칭찬을 받았다(행 17:11). 데살로니가에서 서쪽 약 70km에 위치하며 현재 그리스의 베리아(Veria)다.', photo:'bibleland.net/?s=베뢰아' },
+  { id:'athens',     num:31, kor:'아덴 (아테네)',       nameEn:'Athens',            color:COLORS.paul2,     big:true,  latlng:[37.972,23.724], verse:'행 17:15', desc:'그리스 문명 중심지. 바울이 아레오바고에서 "알지 못하는 신에게" 제단을 근거로 창조주 하나님과 예수의 부활을 선포했다(행 17:22-31). 에비구레오·스도아 철학자들과 논쟁했다.', photo:'bibleland.net/?s=아덴' },
+  { id:'corinth',    num:32, kor:'고린도',             nameEn:'Corinth',           color:COLORS.paul2,     big:true,  latlng:[37.907,22.879], verse:'행 18:1', desc:'그리스 남부 코린토스 지협의 상업 도시. 바울이 약 18개월 체류하며 교회를 세웠다(행 18:11). 아굴라·브리스길라와 함께 천막을 만들며 전도했으며, 총독 갈리오 앞에서 무죄 방면되었다.', photo:'bibleland.net/?s=고린도' },
+  { id:'cenchreae',  num:33, kor:'겐그레아',           nameEn:'Cenchreae',         color:COLORS.paul2,     big:false, latlng:[37.886,22.989], verse:'행 18:18', desc:'고린도 동쪽 에게 해 항구. 바울이 서원을 이행하고 머리를 깎은 곳이다(행 18:18). 뵈뵈가 섬기던 겐그레아 교회가 이곳에 있었다(롬 16:1).', photo:'bibleland.net/?s=겐그레아' },
+  { id:'ephesus',    num:34, kor:'에베소',             nameEn:'Ephesus',           color:COLORS.paul2,     big:true,  latlng:[37.941,27.342], verse:'행 18:19; 19:1', desc:'소아시아 에게 해 연안 아시아 속주 수도. 바울이 약 3년 머물며(행 20:31) 두란노 서원에서 강론하여 아시아 전역에 복음이 전파되었다(행 19:10). 아데미 신전과 데메드리오의 소동으로 유명하다.', photo:'bibleland.net/?s=에베소' },
+  { id:'miletus',    num:35, kor:'밀레도',             nameEn:'Miletus',           color:COLORS.paul3,     big:true,  latlng:[37.531,27.278], verse:'행 20:15', desc:'소아시아 에게 해 연안 고대 이오니아 도시. 바울이 3차 귀환 시 에베소 장로들을 불러 고별 연설을 한 장소다(행 20:17-38). 무릎 꿇고 기도하며 눈물로 작별한 감동적 장면의 배경이다.', photo:'bibleland.net/?s=밀레도' },
+  { id:'assos',      num:36, kor:'앗소',               nameEn:'Assos',             color:COLORS.paul3,     big:false, latlng:[39.491,26.337], verse:'행 20:13', desc:'소아시아 아드라미테 만의 항구 도시. 바울만 도보로 걷고 일행은 배로 이동한 독특한 경로가 기록되어 있다(행 20:13). 현재 튀르키예 베흐람칼레(Behramkale)로, 아테나 신전 유적이 있다.', photo:'bibleland.net/?s=앗소' },
+  { id:'mytilene',   num:37, kor:'미둘레네',           nameEn:'Mytilene (Lesbos)', color:COLORS.paul3,     big:false, latlng:[39.104,26.555], verse:'행 20:14', desc:'에게 해 레스보스 섬의 주도. 바울이 3차 전도여행 귀환 도중 들른 곳이다(행 20:14). 서정시인 사포의 고향으로 알려진 문화의 섬이다.', photo:'bibleland.net/?s=미둘레네' },
+  { id:'chios',      num:38, kor:'기오',               nameEn:'Chios',             color:COLORS.paul3,     big:false, latlng:[38.371,26.136], verse:'행 20:15', desc:'에게 해 동부 섬. 바울의 귀환 항로상 경유지로 기록되어 있다(행 20:15). 고대에 마스틱 향료 수지로 유명했다.', photo:'bibleland.net/?s=기오' },
+  { id:'samos',      num:39, kor:'사모',               nameEn:'Samos',             color:COLORS.paul3,     big:false, latlng:[37.756,26.976], verse:'행 20:15', desc:'소아시아 서안의 섬. 바울의 귀환 항로 경유지다(행 20:15). 수학자 피타고라스의 출생지로 알려진 고대 문명의 섬이다.', photo:'bibleland.net/?s=사모섬' },
+  { id:'cos',        num:40, kor:'고스',               nameEn:'Cos',               color:COLORS.paul3,     big:false, latlng:[36.896,27.288], verse:'행 21:1', desc:'에게 해 도데카네스 군도의 섬. 로도로 가기 전 경유한 곳이다(행 21:1). 의학의 아버지 히포크라테스의 출생지로 유명하다.', photo:'bibleland.net/category/bibleland/그리스_greece/1-마게도냐/고스_코스_kos' },
   { id:'rhodes',     num:41, kor:'로도',               nameEn:'Rhodes',            color:COLORS.paul3,     big:false, latlng:[36.441,28.224], verse:'행 21:1', desc:'에게 해와 지중해 교차점의 섬. 고대 세계 7대 불가사의 로도스의 거상으로 유명하다. 바울이 3차 귀환 시 바다라로 가기 전 경유한 섬이다(행 21:1).', photo:'bibleland.net/category/bibleland/그리스_greece/1-마게도냐/로데_로데스_rhodes' },
-  { id:'patara',     num:42, kor:'바다라',             nameEn:'Patara',            color:COLORS.paul3,     big:false, latlng:[36.347222,29.322861], verse:'행 21:1', desc:'소아시아 리키아 지방 항구 도시. 바울 일행이 로도에서 이곳에서 두로로 직항하는 배로 갈아탔다(행 21:1-3). 아폴로 신탁소로 유명했으며 현재 튀르키예 안탈리아 주 게레미쉬 인근이다.', photo:'검색: 바다라 파타라 리키아 튀르키예' },
-  { id:'sidon',      num:43, kor:'시돈',               nameEn:'Sidon',             color:COLORS.paul4,     big:false, latlng:[33.559,35.372], verse:'행 27:3', desc:'레바논 해안 고대 페니키아 도시. 바울이 로마 이송 중 백부장의 허락으로 친구들을 만난 곳이다(행 27:3). 두로와 함께 고대 페니키아 양대 도시로 현재 레바논의 사이다(Saida)다.', photo:'검색: 시돈 사이다 레바논' },
+  { id:'patara',     num:42, kor:'바다라',             nameEn:'Patara',            color:COLORS.paul3,     big:false, latlng:[36.262,29.316], verse:'행 21:1', desc:'소아시아 리키아 지방 항구 도시. 바울 일행이 로도에서 이곳에서 두로로 직항하는 배로 갈아탔다(행 21:1-3). 아폴로 신탁소로 유명했으며 현재 튀르키예 안탈리아 주 게레미쉬 인근이다.', photo:'bibleland.net/?s=바다라' },
+  { id:'sidon',      num:43, kor:'시돈',               nameEn:'Sidon',             color:COLORS.paul4,     big:false, latlng:[33.559,35.372], verse:'행 27:3', desc:'레바논 해안 고대 페니키아 도시. 바울이 로마 이송 중 백부장의 허락으로 친구들을 만난 곳이다(행 27:3). 두로와 함께 고대 페니키아 양대 도시로 현재 레바논의 사이다(Saida)다.', photo:'bibleland.net/?s=시돈' },
   { id:'myra',       num:44, kor:'무라 (루기아)',       nameEn:'Myra (Lycia)',      color:COLORS.paul4,     big:false, latlng:[36.226,29.956], verse:'행 27:5', desc:'소아시아 리키아 지방 주요 항구. 백부장이 알렉산드리아에서 이탈리아로 항해하는 배로 갈아탄 곳이다(행 27:5-6). 성 니콜라스 주교의 활동지로 현재 튀르키예 뎀레(Demre)다.', photo:'bibleland.net/category/bibleland/turkiye/4-루기아와-밤빌리아/무라_demre' },
-  { id:'fairhavens', num:45, kor:'미항 (그레데)',       nameEn:'Fair Havens, Crete',color:COLORS.paul4,     big:false, latlng:[34.919,24.798], verse:'행 27:8', desc:'그레데(크레타) 섬 남안 항구. 바울이 이곳에서 겨울을 나야 안전하다고 경고했으나 다수 의견으로 항해를 강행하다 폭풍을 만났다(행 27:9-11). 라새아 마을 근처에 위치한다.', photo:'검색: 미항' },
-  { id:'malta',      num:46, kor:'멜리데 (몰타)',       nameEn:'Malta',             color:COLORS.paul4,     big:true,  latlng:[35.897,14.514], verse:'행 28:1', desc:'지중해 중앙부의 섬. 바울 일행이 폭풍으로 14일 표류 후 276명이 파선하고 상륙한 곳이다(행 27:37; 28:1). 독사에 물려도 이상이 없었고, 보블리오의 아버지를 치유했다. 3개월 체류했다.', photo:'검색: 멜리데 몰타 Malta 바울' },
-  { id:'syracuse',   num:47, kor:'수라구사',           nameEn:'Syracuse',          color:COLORS.paul4,     big:false, latlng:[37.075,15.287], verse:'행 28:12', desc:'시칠리아 섬 동남쪽 해안 고대 그리스 식민 도시. 바울이 멜리데에서 출발한 후 처음 기항해 3일간 머문 곳이다(행 28:12). 아르키메데스의 고향으로 유명하다.', photo:'검색: 수라구사 시라쿠사 시칠리아 이탈리아' },
-  { id:'rhegium',    num:48, kor:'레기온',             nameEn:'Rhegium',           color:COLORS.paul4,     big:false, latlng:[38.109,15.644], verse:'행 28:13', desc:'이탈리아 반도 최남단 칼라브리아 지방 항구 도시. 바울이 이탈리아 본토에 처음 발을 디딘 기항지다(행 28:13). 현재 이탈리아 레조 칼라브리아(Reggio Calabria)다.', photo:'검색: 레기온 레조칼라브리아 이탈리아' },
-  { id:'puteoli',    num:49, kor:'보디올',             nameEn:'Puteoli (Pozzuoli)',color:COLORS.paul4,     big:false, latlng:[40.825,14.12], verse:'행 28:13', desc:'이탈리아 나폴리 만 항구 도시. 로마 시대 알렉산드리아 곡물선의 종착항으로 가장 분주한 무역항이었다. 바울이 형제들과 7일간 체류한 곳이다(행 28:14). 현재 이탈리아 포추올리(Pozzuoli)다.', photo:'검색: 보디올 포추올리 나폴리만 이탈리아' },
-  { id:'rome',       num:50, kor:'로마',               nameEn:'Rome',              color:COLORS.paul4,     big:true,  latlng:[41.892,12.485], verse:'행 28:14', desc:'사도행전의 최종 목적지이자 로마 제국의 수도. 바울이 2년간 가택 연금 상태로 "하나님 나라를 전파하며 주 예수 그리스도에 관한 것을 담대히 가르쳤다"(행 28:31). "땅 끝까지 이르러 내 증인이 되리라"(행 1:8)의 성취 장소다.', photo:'검색: 셋집' },
-  { id:'mesopotamia',num:51, kor:'메소포타미아',       nameEn:'Mesopotamia',       color:COLORS.neutral,   big:false, latlng:[33.331,44.415],     verse:'행 2:9; 7:2', desc:'티그리스·유프라테스 두 강 사이 지역으로 현재 이라크에 해당한다. 오순절 디아스포라의 출신지(행 2:9)이며, 아브라함이 갈대아 우르에서 부름받은 땅이기도 하다(행 7:2).', photo:'검색: 메소포타미아 이라크' },
-  { id:'haran',      num:52, kor:'하란',               nameEn:'Haran',             color:COLORS.neutral,   big:false, latlng:[36.862,39.028], verse:'행 7:4', desc:'메소포타미아 북부 고대 도시로 현재 튀르키예 샨르우르파 주에 있다. 아브라함이 갈대아를 떠나 가나안으로 이주하기 전 정착한 곳으로 스데반의 설교에 인용되었다(행 7:4).', photo:'검색: 하란 튀르키예 달 신전' },
-  { id:'shechem',    num:53, kor:'세겜',               nameEn:'Shechem',           color:COLORS.neutral,   big:false, latlng:[32.213,35.282], verse:'행 7:16', desc:'그리심 산과 에발 산 사이 고대 도시. 스데반의 설교에서 야곱과 그 아들들이 장사된 곳으로 언급된다(행 7:16). 현재 팔레스타인 자치 지역 나블루스(Nablus) 인근이다.', photo:'검색: 세겜 나블루스 팔레스타인' },
-  { id:'arabia',     num:54, kor:'아라비아 (페트라)',    nameEn:'Arabia (Petra)',     color:COLORS.calling,   big:false, latlng:[30.328,35.441], verse:'갈 1:17', desc:'바울이 다메섹에서 회심한 후 아라비아로 갔다가 다시 다메섹으로 돌아왔다(갈 1:17). 나바테아 왕국의 수도 페트라 일대로 추정된다. 아레다 왕이 다메섹에 총독을 두었던 기록(고후 11:32)과 연관된다.', photo:'검색: 페트라' },
-  { id:'appii_forum', num:55, kor:'압비오 광장',         nameEn:'Forum of Appius',   color:COLORS.paul4,     big:false, latlng:[41.467,12.998], verse:'행 28:15', desc:'로마에서 남쪽으로 약 69km 떨어진 아피아 가도 위의 역참 도시다. 로마의 형제들이 바울이 온다는 소식을 듣고 이곳까지 마중 나왔다(행 28:15). 바울은 이들을 보고 하나님께 감사하며 담대한 마음을 얻었다.', photo:'검색: 압비오 광장 아피아 가도 이탈리아' },
+  { id:'cnidus',     num:62, kor:'니도',               nameEn:'Cnidus',            color:COLORS.paul4,     big:false, latlng:[36.685,27.370], verse:'행 27:7', desc:'소아시아 카리아 지방 다트차 반도 끝에 위치한 항구 도시다. 바울 일행이 느린 항해 끝에 니도 맞은편에 간신히 이르렀으나 역풍으로 더 이상 직진하지 못하고 그레데 쪽으로 방향을 틀었다(행 27:7). 아프로디테 신전과 프락시텔레스의 조각으로 유명했던 고대 도시다.', photo:'bibleland.net' },
+  { id:'salmone',    num:63, kor:'살모네 (그레데)',      nameEn:'Salmone, Crete',    color:COLORS.paul4,     big:false, latlng:[35.296,26.290], verse:'행 27:7', desc:'그레데(크레타) 섬 동쪽 끝 곶이다. 바울 일행이 니도에서 역풍을 만나 남쪽으로 방향을 틀어 살모네 곶을 돌아 그레데 남안으로 항해했다(행 27:7). 현재 그리스 크레타 동쪽의 시데로스 곶(Cape Sideros) 일대에 해당한다.', photo:'bibleland.net/?s=살모네' },
+  { id:'lasea',      num:64, kor:'라새아',             nameEn:'Lasea',             color:COLORS.paul4,     big:false, latlng:[34.940,24.826], verse:'행 27:8', desc:'그레데(크레타) 섬 남안의 소도시다. 미항 가까이에 위치하며 바울 일행이 미항에 도착했을 때 인근에 있던 성읍으로 기록되어 있다(행 27:8). 현재 크레타 남안 라세아(Lasaia) 유적지에 해당한다.', photo:'bibleland.net/?s=라새아' },
+  { id:'fairhavens', num:45, kor:'미항 (그레데)',       nameEn:'Fair Havens, Crete',color:COLORS.paul4,     big:false, latlng:[34.9319,24.8022], verse:'행 27:8', desc:'그레데(크레타) 섬 남안 항구. 바울이 이곳에서 겨울을 나야 안전하다고 경고했으나 다수 의견으로 항해를 강행하다 폭풍을 만났다(행 27:9-11). 라새아 마을 근처에 위치한다.', photo:'bibleland.net/?s=미항' },
+  { id:'phoenix',    num:65, kor:'뵈닉스 (그레데)',      nameEn:'Phoenix, Crete',    color:COLORS.paul4,     big:false, latlng:[35.200,24.077], verse:'행 27:12', desc:'그레데(크레타) 섬 남서안 항구다. 다수가 미항보다 뵈닉스에서 겨울을 나자고 의견을 내어 항해를 강행했으나 유라굴로 광풍을 만났다(행 27:12-14). 서남풍과 서북풍이 향한 항구로 묘사되며, 현재 크레타 남안 루트로(Loutro) 일대로 비정된다.', photo:'bibleland.net/?s=뵈닉스' },
+  { id:'cauda',      num:66, kor:'가우다',             nameEn:'Cauda (Gavdos)',    color:COLORS.paul4,     big:false, latlng:[34.841,24.086], verse:'행 27:16', desc:'그레데(크레타) 남쪽의 작은 섬이다. 바울 일행이 유라굴로 광풍에 밀려 이 섬 아래로 지나가면서 간신히 거룻배를 잡아 올렸다(행 27:16). 유럽 최남단 유인도인 가브도스(Gavdos) 섬에 해당한다.', photo:'bibleland.net' },
+  { id:'syrtis',     num:67, kor:'스르디스(大)',           nameEn:'Syrtis Major',      color:COLORS.paul4,     big:false, latlng:[31.200,18.500], verse:'행 27:17', desc:'북아프리카 리비아 해안의 대(大)스르디스다. 시드라 만(Gulf of Sidra) 일대의 광활한 모래톱과 얕은 해역으로, 고대 지중해 항해에서 가장 두려운 좌초 구역이었다. 바울 일행이 가우다를 지난 뒤 스르디스에 빠질까 두려워 연장을 늦추어 그대로 쫓겨갔다(행 27:17).', photo:'bibleland.net' },
+  { id:'syrtis_minor', num:69, kor:'스르디스(小)',        nameEn:'Syrtis Minor',      color:COLORS.paul4,     big:false, latlng:[34.000,10.500], verse:'행 27:17', desc:'북아프리카 튀니지 해안의 소(小)스르디스다. 가베스 만(Gulf of Gabes) 일대로 대스르디스와 함께 고대 선원들이 두려워했던 얕은 모래톱 해역이다. 조수 간만의 차가 크고 수심이 얕아 좌초 위험이 높았다. 현재 튀니지 가베스(Gabès)와 제르바(Djerba) 섬 일대에 해당한다.', photo:'bibleland.net' },
+  { id:'malta',      num:46, kor:'멜리데 (몰타)',       nameEn:'Malta',             color:COLORS.paul4,     big:true,  latlng:[35.897,14.514], verse:'행 28:1', desc:'지중해 중앙부의 섬. 바울 일행이 폭풍으로 14일 표류 후 276명이 파선하고 상륙한 곳이다(행 27:37; 28:1). 독사에 물려도 이상이 없었고, 보블리오의 아버지를 치유했다. 3개월 체류했다.', photo:'bibleland.net' },
+  { id:'syracuse',   num:47, kor:'수라구사',           nameEn:'Syracuse',          color:COLORS.paul4,     big:false, latlng:[37.075,15.287], verse:'행 28:12', desc:'시칠리아 섬 동남쪽 해안 고대 그리스 식민 도시. 바울이 멜리데에서 출발한 후 처음 기항해 3일간 머문 곳이다(행 28:12). 아르키메데스의 고향으로 유명하다.', photo:'bibleland.net' },
+  { id:'rhegium',    num:48, kor:'레기온',             nameEn:'Rhegium',           color:COLORS.paul4,     big:false, latlng:[38.109,15.644], verse:'행 28:13', desc:'이탈리아 반도 최남단 칼라브리아 지방 항구 도시. 바울이 이탈리아 본토에 처음 발을 디딘 기항지다(행 28:13). 현재 이탈리아 레조 칼라브리아(Reggio Calabria)다.', photo:'bibleland.net/?s=레기온' },
+  { id:'puteoli',    num:49, kor:'보디올',             nameEn:'Puteoli (Pozzuoli)',color:COLORS.paul4,     big:false, latlng:[40.825,14.12], verse:'행 28:13', desc:'이탈리아 나폴리 만 항구 도시. 로마 시대 알렉산드리아 곡물선의 종착항으로 가장 분주한 무역항이었다. 바울이 형제들과 7일간 체류한 곳이다(행 28:14). 현재 이탈리아 포추올리(Pozzuoli)다.', photo:'bibleland.net/?s=보디올' },
+  { id:'rome',       num:50, kor:'로마',               nameEn:'Rome',              color:COLORS.paul4,     big:true,  latlng:[41.892,12.485], verse:'행 28:14', desc:'사도행전의 최종 목적지이자 로마 제국의 수도. 바울이 2년간 가택 연금 상태로 "하나님 나라를 전파하며 주 예수 그리스도에 관한 것을 담대히 가르쳤다"(행 28:31). "땅 끝까지 이르러 내 증인이 되리라"(행 1:8)의 성취 장소다.', photo:'bibleland.net/?s=로마' },
+  { id:'alexandria', num:68, kor:'알렉산드리아',         nameEn:'Alexandria',        color:COLORS.paul4,     big:false, latlng:[31.200,29.916], verse:'행 27:6; 28:11', desc:'이집트 나일 강 삼각주 서쪽 지중해 연안의 대도시다. 알렉산더 대왕이 기원전 331년에 건설했으며 고대 세계 최대의 도서관이 있었다. 백부장이 무라에서 이탈리아로 가는 알렉산드리아 배를 만나 갈아탔고(행 27:6), 멜리데에서도 알렉산드리아 배를 타고 수라구사로 떠났다(행 28:11). 로마의 곡물 공급을 담당하던 핵심 무역항이었다.', photo:'bibleland.net/?s=알렉산드리아' },
+  { id:'mesopotamia',num:51, kor:'메소포타미아',       nameEn:'Mesopotamia',       color:COLORS.neutral,   big:false, latlng:[33.331,44.415],     verse:'행 2:9; 7:2', desc:'티그리스·유프라테스 두 강 사이 지역으로 현재 이라크에 해당한다. 오순절 디아스포라의 출신지(행 2:9)이며, 아브라함이 갈대아 우르에서 부름받은 땅이기도 하다(행 7:2).', photo:'bibleland.net/?s=메소포타미아' },
+  { id:'haran',      num:52, kor:'하란',               nameEn:'Haran',             color:COLORS.neutral,   big:false, latlng:[36.862,39.028], verse:'행 7:4', desc:'메소포타미아 북부 고대 도시로 현재 튀르키예 샨르우르파 주에 있다. 아브라함이 갈대아를 떠나 가나안으로 이주하기 전 정착한 곳으로 스데반의 설교에 인용되었다(행 7:4).', photo:'bibleland.net/?s=하란' },
+  { id:'shechem',    num:53, kor:'세겜',               nameEn:'Shechem',           color:COLORS.neutral,   big:false, latlng:[32.213,35.282], verse:'행 7:16', desc:'그리심 산과 에발 산 사이 고대 도시. 스데반의 설교에서 야곱과 그 아들들이 장사된 곳으로 언급된다(행 7:16). 현재 팔레스타인 자치 지역 나블루스(Nablus) 인근이다.', photo:'bibleland.net/?s=세겜' },
+  { id:'arabia',     num:54, kor:'아라비아 (페트라)',    nameEn:'Arabia (Petra)',     color:COLORS.calling,   big:false, latlng:[30.328,35.441], verse:'갈 1:17', desc:'바울이 다메섹에서 회심한 후 아라비아로 갔다가 다시 다메섹으로 돌아왔다(갈 1:17). 나바테아 왕국의 수도 페트라 일대로 추정된다. 아레다 왕이 다메섹에 총독을 두었던 기록(고후 11:32)과 연관된다.', photo:'bibleland.net/?s=페트라' },
+  { id:'appii_forum', num:55, kor:'압비오 광장',         nameEn:'Forum of Appius',   color:COLORS.paul4,     big:false, latlng:[41.467,12.998], verse:'행 28:15', desc:'로마에서 남쪽으로 약 69km 떨어진 아피아 가도 위의 역참 도시다. 로마의 형제들이 바울이 온다는 소식을 듣고 이곳까지 마중 나왔다(행 28:15). 바울은 이들을 보고 하나님께 감사하며 담대한 마음을 얻었다.', photo:'bibleland.net/?s=압비오' },
   { id:'tres_tabernae', num:56, kor:'트레이스 타베르네',  nameEn:'Three Taverns',     color:COLORS.paul4,     big:false, latlng:[41.565,12.876], verse:'행 28:15', desc:'로마에서 남쪽으로 약 53km 떨어진 아피아 가도 위의 휴게소다. 압비오 광장과 함께 로마 형제들이 바울을 영접하러 나온 장소로 기록되어 있다(행 28:15). 현재 치스테르나 디 라티나 인근으로 추정된다.', photo:'bibleland.net/category/bibleland/6-이탈리아/트레이스-타베르네' },
   { id:'antipatris',  num:57, kor:'안디바드리',          nameEn:'Antipatris',        color:COLORS.paul4,     big:false, latlng:[32.114,34.93], verse:'행 23:31', desc:'예루살렘과 가이사랴 사이 해안 평야의 도시로 헤롯 대왕이 아버지 안디바더의 이름을 따 건설했다. 바울이 예루살렘에서 체포된 후 군사들의 호송으로 밤중에 이곳까지 이동했다(행 23:31). 이튿날 기병대가 바울을 가이사랴의 총독 벨릭스에게 인도했다. 현재 이스라엘 텔아펙(Tel Afek) 유적지다.', photo:'bibleland.net/category/bibleland/israel-palestine/mediterranean-sea/aphak' },
-  { id:'phrygia',    num:59, kor:'브루기아',             nameEn:'Phrygia (Afyonkarahisar)', color:COLORS.paul2, big:false, latlng:[38.748,30.540], verse:'행 16:6', desc:'소아시아 내륙 고원 지방이다. 바울이 제2차 전도여행 때 갈라디아와 브루기아 지방을 지나 아시아에서 말씀을 전하지 못하게 되어 무시아를 거쳐 드로아로 내려갔다(행 16:6-8). 현재 튀르키예 아피온카라히사르(Afyonkarahisar) 일대로 추정된다.', photo:'검색: 브루기아 아피온카라히사르 튀르키예' },
-  { id:'samothrace', num:60, kor:'사모드라게',           nameEn:'Samothrace',        color:COLORS.paul2,     big:false, latlng:[40.468,25.524], verse:'행 16:11', desc:'에게해 북동부의 그리스 섬이다. 바울이 제2차 전도여행 때 드로아에서 네압볼리로 항해하는 도중 이 섬에 정박하였다(행 16:11). 고대에는 카비로이 밀의 제전으로 유명했으며 유네스코 세계문화유산으로 등록된 니게 승리의 여신상이 이 섬에서 출토되었다.', photo:'검색: 사모드라게 사모트라케 그리스' },
+  { id:'phrygia',    num:59, kor:'브루기아',             nameEn:'Phrygia (Afyonkarahisar)', color:COLORS.paul2, big:false, latlng:[38.748,30.540], verse:'행 16:6', desc:'소아시아 내륙 고원 지방이다. 바울이 제2차 전도여행 때 갈라디아와 브루기아 지방을 지나 아시아에서 말씀을 전하지 못하게 되어 무시아를 거쳐 드로아로 내려갔다(행 16:6-8). 현재 튀르키예 아피온카라히사르(Afyonkarahisar) 일대로 추정된다.', photo:'bibleland.net/?s=브루기아' },
+  { id:'samothrace', num:60, kor:'사모드라게',           nameEn:'Samothrace',        color:COLORS.paul2,     big:false, latlng:[40.468,25.524], verse:'행 16:11', desc:'에게해 북동부의 그리스 섬이다. 바울이 제2차 전도여행 때 드로아에서 네압볼리로 항해하는 도중 이 섬에 정박하였다(행 16:11). 고대에는 카비로이 밀의 제전으로 유명했으며 유네스코 세계문화유산으로 등록된 니게 승리의 여신상이 이 섬에서 출토되었다.', photo:'bibleland.net/?s=사모드라게' },
+  { id:'macedonia',  num:61, kor:'마게도냐',             nameEn:'Macedonia (Thessalonica)',  color:COLORS.paul3, big:false, latlng:[40.630,22.940], verse:'행 20:1-2', desc:'그리스 북부 로마 속주로 데살로니가가 수도였다. 바울이 제3차 전도여행 때 에베소에서의 소요가 그친 뒤 제자들을 권면하고 마게도냐로 건너가 여러 지역을 다니며 성도들을 격려하였다(행 20:1-2).', photo:'bibleland.net/?s=마게도냐' },
 ];
 
 const routeOrder = {
   calling: ['jerusalem','damascus','arabia','damascus','jerusalem','tarsus','antioch_s'],
   paul1: ['antioch_s','seleucia','salamis','paphos','perga','antioch_p','iconium','lystra','derbe','lystra','iconium','antioch_p','perga','attalia','antioch_s'],
   paul2: ['antioch_s','tarsus','derbe','lystra','phrygia','troas','samothrace','neapolis','philippi','amphipolis','apollonia','thessalonica','berea','athens','corinth','cenchreae','ephesus','caesarea','jerusalem','antioch_s'],
-  paul3: ['antioch_s','tarsus','ephesus','philippi','corinth','philippi','troas','assos','mytilene','chios','samos','miletus','cos','rhodes','patara','tyre','ptolemais','caesarea','jerusalem'],
-  paul4: ['jerusalem','antipatris','caesarea','sidon','myra','fairhavens','malta','syracuse','rhegium','puteoli','appii_forum','tres_tabernae','rome'],
+  paul3: ['antioch_s','tarsus','derbe','lystra','iconium','antioch_p','phrygia','ephesus','neapolis','philippi','corinth','philippi','troas','assos','mytilene','chios','samos','miletus','cos','rhodes','patara','tyre','ptolemais','caesarea','jerusalem'],
+  paul4: ['jerusalem','antipatris','caesarea','sidon','myra','lasea','fairhavens','malta','syracuse','rhegium','puteoli','appii_forum','tres_tabernae','rome'],
   philip: ['jerusalem','samaria','gaza','azotus','caesarea'],
   peter: ['jerusalem','lydda','joppa','caesarea','jerusalem']
 };
@@ -715,7 +724,18 @@ const circledNums = ['①','②','③','④','⑤','⑥','⑦','⑧','⑨','⑩'
 
 // 경유지(번호 없이 이름만 표시하는 지명) — 경로 라인은 유지
 const transitStops = {
-  paul2: new Set(['tarsus','phrygia'])
+  paul2: new Set(['tarsus','phrygia']),
+  paul4: new Set(['lasea'])
+};
+
+// 경로 라인만 유지하고 마커(점·이름)를 표시하지 않는 지명
+const hiddenStops = {
+  paul3: new Set(['tarsus','derbe','lystra','iconium','antioch_p','phrygia','neapolis'])
+};
+
+// 경로 라인에 포함되지 않지만 해당 경로 활성 시 점(●) 마커로 표시할 지명
+const extraDotMarkers = {
+  paul4: ['alexandria','phoenix','syrtis','syrtis_minor','cnidus','salmone','cauda']
 };
 
 // ============================================================
@@ -789,19 +809,29 @@ function makePopup(pl, seqLabel) {
   `;
 }
 
+// 왕복 경로에서 같은 지명이 go/return 양쪽에 번호 표시되는 경로
+const allowDuplicateMarkers = new Set(['paul3']);
+
 function buildRouteMarkers(routeKey) {
   const grp = L.layerGroup();
   const order = routeOrder[routeKey];
   if (!order) return grp;
   const color = COLORS[routeKey];
   const visited = new Set();
+  const noDup = !allowDuplicateMarkers.has(routeKey);
   const transit = transitStops[routeKey] || new Set();
+  const hidden = hiddenStops[routeKey] || new Set();
+  const placeNumMap = {};  // 중복 지명 재방문 시 동일 번호 재사용
   let seqNum = 0;
   order.forEach((plId) => {
-    if (visited.has(plId)) return;
+    if (noDup && visited.has(plId)) return;
     visited.add(plId);
     const pl = placeById[plId];
     if (!pl) return;
+    if (hidden.has(plId)) {
+      // 숨김 경유지: 경로 라인만 유지, 마커 표시 안 함
+      return;
+    }
     if (transit.has(plId)) {
       // 경유지: 번호 없이 이름만 표시
       const icon = makeDotIcon(pl.kor, color, pl.big);
@@ -809,13 +839,31 @@ function buildRouteMarkers(routeKey) {
       m.bindPopup(makePopup(pl), { maxWidth: isMobileDevice ? 260 : 310 });
       grp.addLayer(m);
     } else {
-      seqNum++;
-      const icon = makePlaceIcon(seqNum, pl.kor, color, pl.big);
+      let num;
+      if (placeNumMap[plId] !== undefined) {
+        // 재방문 지명: 기존 번호 재사용 (예: 빌립보 ③→고린도→빌립보 ③)
+        num = placeNumMap[plId];
+      } else {
+        seqNum++;
+        num = seqNum;
+        placeNumMap[plId] = num;
+      }
+      const icon = makePlaceIcon(num, pl.kor, color, pl.big);
       const m = L.marker(pl.latlng, { icon });
-      const label = (seqNum >= 1 && seqNum <= 30) ? circledNums[seqNum - 1] : seqNum;
+      const label = (num >= 1 && num <= 30) ? circledNums[num - 1] : num;
       m.bindPopup(makePopup(pl, label), { maxWidth: isMobileDevice ? 260 : 310 });
       grp.addLayer(m);
     }
+  });
+  // 경로 라인 외 추가 점 마커 (extraDotMarkers)
+  const extras = extraDotMarkers[routeKey] || [];
+  extras.forEach(plId => {
+    const pl = placeById[plId];
+    if (!pl) return;
+    const icon = makeDotIcon(pl.kor, color, pl.big);
+    const m = L.marker(pl.latlng, { icon });
+    m.bindPopup(makePopup(pl), { maxWidth: isMobileDevice ? 260 : 310 });
+    grp.addLayer(m);
   });
   return grp;
 }
@@ -849,7 +897,7 @@ const routeStyles = {
   paul1:   { color: '#FF3D00', weight: 3.5, dashArray: null },
   paul2:   { color: '#00E5FF', weight: 3.5, dashArray: null },
   paul3:   { color: '#00E676', weight: 3.5, dashArray: null },
-  paul4:   { color: '#D500F9', weight: 3.5, dashArray: '9,5' },
+  paul4:   { color: '#D500F9', weight: 3.5, dashArray: null },
   philip:  { color: '#FFD600', weight: 3.5, dashArray: null },
   peter:   { color: '#FF4081', weight: 3.5, dashArray: null }
 };
@@ -893,7 +941,8 @@ const segWP = {
   // 루스드라→이고니온: 귀환 복선 Konya-Akören Yolu 역순 (+0.04 lat 오프셋)
   'lystra->iconium':[[37.68,32.37],[37.71,32.40],[37.76,32.43],[37.81,32.46],[37.86,32.48]],
   // 이고니온→비시디아 안디옥: 귀환 복선 Via Sebaste 역순 (+0.04 lat 오프셋)
-  'iconium->antioch_p':[[37.94,32.35],[37.97,32.15],[37.99,31.95],[38.02,31.75],[38.04,31.55],[38.12,31.39],[38.24,31.25]],
+  // 이고니온→비시디아 안디옥: Via Sebaste — 코냐 평원 NW → 카든하느 → 을른 → 악셰히르 → 얄바츠
+  'iconium->antioch_p':[[38.00,32.35],[38.15,32.15],[38.28,31.92],[38.36,31.42],[38.33,31.27]],
   // 비시디아 안디옥→버가: 귀환 복선 Via Sebaste 역순 (+0.04 lat 오프셋)
   'antioch_p->perga':[[38.14,31.15],[37.94,31.12],[37.79,31.08],[37.69,31.05],[37.59,31.05],[37.49,30.80],[37.39,30.72],[37.29,30.70],[37.19,30.75],[37.09,30.80]],
   // 버가→앗달리아: 짧은 도로 12km
@@ -953,30 +1002,45 @@ const segWP = {
 
   // ═══ 바울 제3차 전도여행 (paul3) ═══
   // 안디옥→다소 (paul2와 동일)
-  // 다소→에베소: 길리기아→프루기아→아시아 서쪽 육로
-  'tarsus->ephesus':[[36.80,34.50],[37.00,33.80],[37.20,33.00],[37.40,32.20],[37.60,31.50],[37.80,30.80],[38.00,30.00],[38.20,29.20],[38.30,28.50],[38.20,27.80],[38.00,27.50]],
-  // 에베소→빌립보: 해로 — 에게해 북상
-  'ephesus->philippi':[[38.00,27.20],[38.30,26.80],[38.70,26.30],[39.20,25.80],[39.60,25.30],[40.00,24.80],[40.40,24.50],[40.80,24.35]],
-  // 빌립보→고린도: Via Egnatia→남하 해로
-  'philippi->corinth':[[40.90,24.20],[40.82,23.85],[40.75,23.50],[40.65,23.10],[40.63,22.95],[40.40,22.80],[40.00,22.80],[39.50,23.00],[39.00,23.10],[38.50,23.00],[38.10,22.95]],
-  // 고린도→빌립보: 역순 해로
-  'corinth->philippi':[[38.10,22.95],[38.50,23.00],[39.00,23.10],[39.50,23.00],[40.00,22.80],[40.40,22.80],[40.63,22.95],[40.65,23.10],[40.75,23.50],[40.82,23.85],[40.90,24.20]],
-  // 빌립보→드로아: Via Egnatia 동쪽→네압볼리→해로
-  'philippi->troas':[[40.95,24.35],[40.94,24.41],[40.70,25.00],[40.30,25.50],[39.90,26.00]],
+  // 다소→더베: Via Tauri (paul2와 동일 segWP 재사용)
+  // 더베→루스드라→이고니온→비시디아 안디옥: 갈라디아 도로 (paul1 segWP 재사용)
+  // 비시디아 안디옥→브루기아: 얄바츠→코즐루차이 계곡→슈후트(술탄산맥 서쪽 회랑)→아피온카라히사르
+  'antioch_p->phrygia':[[38.40,31.05],[38.48,30.85],[38.53,30.55],[38.65,30.52]],
+  // 브루기아→에베소: 고대 로마 도로 — 아피온→산들클→디나르(아파메아)→데니즐리(라오디게아)→아이든(트랄레스)→에베소
+  // 메안드로스(뷔윅 멘데레스) 강 계곡을 따르는 우회 경로 (산악 직선 관통 X)
+  'phrygia->ephesus':[[38.46,30.29],[38.06,30.01],[37.92,29.60],[37.77,29.10],[37.84,28.65],[37.87,28.32],[37.85,27.84],[37.88,27.60]],
+  // 에베소→앗소: 육로 E87 해안도로 — 에베소→이즈미르→버가모→에드레밋만→알트놀루크→앗소 (행 20:13, paul3 Go 실선)
+  'ephesus->assos':[[38.05,27.30],[38.20,27.22],[38.42,27.14],[38.60,27.07],[38.80,26.97],[39.00,27.05],[39.12,27.18],[39.22,27.00],[39.32,26.82],[39.43,26.92],[39.55,27.00],[39.60,26.90],[39.60,26.80],[39.57,26.70],[39.55,26.58],[39.52,26.46]],
+  // 에베소→드로아: 육로 D550(E87) — 에베소→이즈미르→버가모→아발리크→알튼올루크→드로아 (행 20:1, Return 점선 경로)
+  'ephesus->troas':[[38.05,27.30],[38.20,27.22],[38.42,27.14],[38.58,27.10],[38.75,27.12],[38.90,27.16],[39.05,27.18],[39.15,27.14],[39.25,27.02],[39.32,26.88],[39.38,26.82],[39.44,26.82],[39.48,26.86],[39.52,26.88],[39.55,26.84],[39.57,26.78],[39.57,26.72],[39.55,26.62],[39.50,26.40],[39.52,26.25],[39.58,26.14],[39.66,26.11]],
+  // 드로아→네압볼리: 해로 — 에게해 횡단 (paul2 항로 참고, 행 20:6)
+  'troas->neapolis':[[39.80,25.78],[39.95,25.58],[40.15,25.48],[40.30,25.46],[40.45,25.30],[40.60,25.10],[40.82,24.95],[40.87,24.68],[40.92,24.50]],
+  // (구 ephesus->neapolis 합산 segWP — paul3 Go 분할로 미사용, troas->neapolis로 대체)
+  // 빌립보→고린도: Via Egnatia 서행 → 데살로니가 경유 → 그리스 내륙 남행 육로
+  'philippi->corinth':[[41.00,24.18],[40.98,24.05],[40.95,23.95],[40.90,23.90],[40.85,23.87],[40.78,23.75],[40.73,23.65],[40.68,23.55],[40.66,23.35],[40.65,23.20],[40.64,23.05],[40.63,22.94],[40.45,22.70],[40.27,22.50],[39.87,22.49],[39.64,22.42],[39.28,22.38],[38.90,22.43],[38.80,22.56],[38.72,22.72],[38.62,22.90],[38.50,23.05],[38.40,23.16],[38.34,23.26],[38.28,23.30],[38.20,23.30],[38.12,23.28],[38.04,23.22],[37.98,23.12],[37.97,23.03]],
+  // 고린도→빌립보: 육로 북행 귀환 (복선 표현을 위해 ~3km 평행 오프셋 적용, 행 20:3)
+  'corinth->philippi':[[38.00,23.02],[38.01,23.11],[38.07,23.20],[38.14,23.25],[38.20,23.27],[38.27,23.27],[38.31,23.24],[38.37,23.14],[38.47,23.03],[38.59,22.88],[38.69,22.70],[38.77,22.54],[38.89,22.40],[39.28,22.35],[39.65,22.39],[39.87,22.46],[40.28,22.47],[40.48,22.68],[40.66,22.92],[40.67,23.05],[40.68,23.20],[40.69,23.35],[40.71,23.54],[40.76,23.63],[40.81,23.73],[40.88,23.85],[40.92,23.87],[40.98,23.93],[41.01,24.04],[41.03,24.18]],
+  // 빌립보→드로아: 해로 귀환 — 복선 표현을 위해 Go(에베소→네압볼리 해로) 대비 ~3.5km 평행 오프셋 (행 20:6)
+  'philippi->troas':[[40.971,24.428],[40.954,24.509],[40.904,24.688],[40.849,24.969],[40.624,25.125],[40.477,25.322],[40.318,25.49],[40.161,25.513],[39.973,25.607],[39.833,25.791]],
   // 드로아→앗소: 해안 도로 (바울은 도보, 행 20:13)
-  'troas->assos':[[39.70,26.15],[39.65,26.20],[39.55,26.28]],
+  // 드로아→앗소: 로마 고대 도로 — 드로아→스민테이온(아폴로 스민테우스 신전, 귈프나르)→앗소 (행 20:13 바울 도보)
+  'troas->assos':[[39.68,26.16],[39.62,26.14],[39.56,26.12],[39.51,26.22]],
+  // 앗소→드로아: 복선 표현용 — troas->assos 대비 ~3km 동쪽(내륙) 평행 오프셋 (행 20:13 바울 도보/선원 해로 병행)
+  'assos->troas':[[39.543,26.231],[39.581,26.148],[39.609,26.173],[39.680,26.195]],
   // 앗소→미둘레네: 해로 — 레스보스 섬으로
-  'assos->mytilene':[[39.40,26.35],[39.30,26.40],[39.20,26.50]],
+  'assos->mytilene':[[39.42,26.48],[39.32,26.52],[39.20,26.55]],
   // 미둘레네→기오: 해로 — 섬 사이 항해
-  'mytilene->chios':[[39.00,26.50],[38.80,26.40],[38.55,26.20]],
+  'mytilene->chios':[[38.98,26.62],[38.82,26.52],[38.62,26.35],[38.48,26.18]],
   // 기오→사모: 해로 — 해안 따라 남하
-  'chios->samos':[[38.20,26.10],[38.00,26.20],[37.80,26.50]],
+  'chios->samos':[[38.15,26.25],[37.95,26.50],[37.85,26.75],[37.82,26.92]],
   // 사모→밀레도: 해로 — 사모 해협 횡단
-  'samos->miletus':[[37.65,26.90],[37.58,27.10]],
+  // 사모→밀레도: 해로 — 미칼레 해협 남쪽 출구(사모 SE↔딜렉 SW 간 5.7km) 통과 → 열린 해역 남하
+  'samos->miletus':[[37.755,27.02],[37.73,27.025],[37.70,27.015],[37.67,27.025],[37.63,27.04],[37.59,27.12],[37.56,27.21]],
   // 밀레도→고스: 해로 — 해안 따라 남하
-  'miletus->cos':[[37.40,27.30],[37.20,27.30],[37.05,27.20]],
+  'miletus->cos':[[37.35,27.22],[37.15,27.15],[37.00,27.22]],
   // 고스→로도: 해로 — 도데카네스 제도 남하
-  'cos->rhodes':[[36.80,27.20],[36.65,27.50],[36.55,27.80],[36.48,28.10]],
+  // 고스→로도: 해로 — 닷차 반도(크니도스) 남쪽·시미 섬 남쪽 우회 항로
+  'cos->rhodes':[[36.84,27.22],[36.75,27.15],[36.65,27.22],[36.58,27.50],[36.50,27.80],[36.45,28.05]],
   // 로도→바다라: 해로 — 루기아 해안으로
   'rhodes->patara':[[36.40,28.40],[36.35,28.70],[36.30,29.00]],
   // 바다라→두로: 해로 — 지중해 직항 (행 21:1-3)
@@ -999,11 +1063,12 @@ const segWP = {
   // 가이사랴→시돈: 해로 — 해안 따라 북상
   'caesarea->sidon':[[32.70,34.85],[33.00,34.90],[33.27,35.10]],
   // 시돈→무라: 해로 — 구브로 섬 동쪽 지나감 (행 27:4-5 "구브로 밑으로 항행")
-  'sidon->myra':[[33.70,35.30],[34.20,35.20],[34.60,34.80],[35.00,34.20],[35.20,33.50],[35.40,32.80],[35.60,32.30],[35.80,31.80],[36.00,31.00],[36.10,30.50],[36.15,30.20],[36.20,29.98]],
-  // 무라→미항: 해로 — 그레데 남해안 (행 27:7-8 "구레데 밑으로 항행")
-  'myra->fairhavens':[[36.15,29.80],[36.05,29.30],[35.90,28.50],[35.70,27.80],[35.50,27.00],[35.40,26.50],[35.30,26.00],[35.20,25.80],[35.10,25.50],[35.05,25.20]],
-  // 미항→멜리데: 해로 — 폭풍으로 표류 (행 27:14-28 "유라굴로 광풍")
-  'fairhavens->malta':[[34.80,24.50],[34.60,23.80],[34.50,23.00],[34.60,22.00],[34.80,21.00],[35.00,20.00],[35.20,19.00],[35.40,18.00],[35.50,17.00],[35.60,16.00],[35.70,15.50],[35.80,15.00]],
+  'sidon->myra':[[33.65,35.35],[34.15,35.30],[34.60,35.10],[35.10,34.90],[35.50,34.70],[35.80,34.55],[36.05,34.20],[36.10,33.60],[35.95,33.00],[35.90,32.50],[36.05,32.00],[36.30,31.40],[36.35,30.80],[36.25,30.30],[36.22,30.05]],
+  // 무라→라새아: 해로 — 니도 맞은편(10km)·살모네 앞(10km) 통과 후 그레데 남해안 (행 27:5-8)
+  'myra->lasea':[[36.30,29.60],[36.40,29.10],[36.50,28.60],[36.55,28.10],[36.55,27.60],[36.59,27.35],[36.30,27.00],[35.90,26.70],[35.50,26.45],[35.20,26.30],[35.05,26.30],[34.88,26.05],[34.80,25.65],[34.83,25.40],[34.85,25.10],[34.87,24.90]],
+  // 라새아→미항: 해로 — 인접 지점 (행 27:8 "라새아 성이 그 가까이 있더라")
+  // 미항→멜리데: 해로 — 가우다 남쪽 10km 통과, 유라굴로 광풍 14일 표류 후 멜리데 상륙 (행 27:13-28:1)
+  'fairhavens->malta':[[34.90,24.50],[34.83,24.25],[34.75,24.05],[34.45,23.20],[34.10,22.30],[33.70,21.30],[33.40,20.20],[33.50,19.00],[33.80,17.80],[34.30,16.80],[34.90,15.80],[35.40,15.10]],
   // 멜리데→수라구사: 해로 — 시칠리아 동해안
   'malta->syracuse':[[35.95,14.60],[36.20,14.80],[36.50,15.00],[36.80,15.15]],
   // 수라구사→레기온: 해로 — 메시나 해협 통과
@@ -1062,10 +1127,18 @@ const paul1Return = ['derbe','lystra','iconium','antioch_p','perga','attalia','s
 const paul2Go = ['antioch_s','tarsus','derbe','lystra','phrygia','troas','samothrace','neapolis','philippi','amphipolis','apollonia','thessalonica','berea','athens','corinth','cenchreae'];
 const paul2Return = ['cenchreae','ephesus','caesarea','antipatris','jerusalem','antipatris','caesarea','ptolemais','tyre','sidon','antioch_s'];
 
+// 바울 3차: 갈 때(실선) 두 구간 / 올 때(고린도→예루살렘, 점선)
+// GoA: 안디옥→에베소→앗소 (육로 E87 해안도로) — 에베소→이즈미르→버가모→알트놀루크→앗소
+// GoB: 드로아→네압볼리(해로)→빌립보→고린도
+const paul3GoA = ['antioch_s','tarsus','derbe','lystra','iconium','antioch_p','phrygia','ephesus','assos'];
+const paul3GoB = ['troas','neapolis','philippi','corinth'];
+const paul3Return = ['corinth','philippi','troas','assos','mytilene','chios','samos','miletus','cos','rhodes','patara','tyre','ptolemais','caesarea','jerusalem'];
+
 // 갈 때/올 때 분리가 필요한 경로 정의
 const splitRoutes = {
   paul1: { go: paul1Go, ret: paul1Return },
-  paul2: { go: paul2Go, ret: paul2Return }
+  paul2: { go: paul2Go, ret: paul2Return },
+  paul3: { go: paul3GoA, goB: paul3GoB, ret: paul3Return }
 };
 
 const routeDefs = {};
@@ -1073,13 +1146,15 @@ Object.keys(routeStyles).forEach(key => {
   const style = routeStyles[key];
   if (splitRoutes[key]) {
     const sr = splitRoutes[key];
-    routeDefs[key] = {
+    const def = {
       color: style.color, weight: style.weight,
       goCoords: buildCoordsFromOrder(sr.go),
       returnCoords: buildCoordsFromOrder(sr.ret),
       dashArrayGo: style.dashArray || null,
       dashArrayReturn: '8,5'
     };
+    if (sr.goB) def.goCoordsB = buildCoordsFromOrder(sr.goB);
+    routeDefs[key] = def;
   } else {
     routeDefs[key] = {
       color: style.color, weight: style.weight,
@@ -1113,13 +1188,25 @@ Object.keys(routeDefs).forEach(key => {
   if (d.goCoords) {
     // 갈 때: 실선 (또는 원래 dashArray)
     grp.addLayer(L.polyline(d.goCoords, { color: d.color, weight: d.weight, dashArray: d.dashArrayGo, opacity: 0.9 }));
+    // 갈 때 두 번째 구간 (예: paul3 드로아→네압볼리→빌립보→고린도)
+    if (d.goCoordsB) {
+      grp.addLayer(L.polyline(d.goCoordsB, { color: d.color, weight: d.weight, dashArray: d.dashArrayGo, opacity: 0.9 }));
+    }
     // 올 때: 점선
     grp.addLayer(L.polyline(d.returnCoords, { color: d.color, weight: d.weight, dashArray: d.dashArrayReturn, opacity: 0.7 }));
-    // split 경로(paul1, paul2)는 화살표 생략 — 실선/점선으로 방향 구분
+    // 복선 구간: 드로아↔앗소 — Return 점선과 평행한 실선 (행 20:13 바울 도보/선원 해로 병행)
+    if (key === 'paul3') {
+      const troasAssosSolid = buildCoordsFromOrder(['assos','troas']);
+      grp.addLayer(L.polyline(troasAssosSolid, { color: d.color, weight: d.weight, dashArray: null, opacity: 0.9 }));
+    }
+    // split 경로(paul1, paul2, paul3)는 화살표 생략 — 실선/점선으로 방향 구분
   } else {
     grp.addLayer(L.polyline(d.coords, { color: d.color, weight: d.weight, dashArray: d.dashArray, opacity: 0.9 }));
-    const arrow = buildArrow(d.coords, d.color);
-    if (arrow) grp.addLayer(arrow);
+    // paul4는 화살표 생략 — 실선 경로로 방향 표시
+    if (key !== 'paul4') {
+      const arrow = buildArrow(d.coords, d.color);
+      if (arrow) grp.addLayer(arrow);
+    }
   }
   routeLineLayers[key] = grp;
 });
@@ -1177,8 +1264,8 @@ function setViewMode(mode) {
   } else {
     if (commonItem) commonItem.style.display = 'flex';
     if (commonItemMobile) commonItemMobile.style.display = 'flex';
-    if (hint) hint.textContent = '전체 57개 지명을 지도에 표시합니다.';
-    if (hintMobile) hintMobile.textContent = '전체 57개 지명을 지도에 표시합니다.';
+    if (hint) hint.textContent = '전체 68개 지명을 지도에 표시합니다.';
+    if (hintMobile) hintMobile.textContent = '전체 68개 지명을 지도에 표시합니다.';
     if (btnRoute) btnRoute.classList.remove('active');
     if (btnSpot) btnSpot.classList.add('active');
     if (btnRouteMobile) btnRouteMobile.classList.remove('active');
