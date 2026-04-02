@@ -21,7 +21,12 @@
       --sab: 0px;
     }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+    html.is-mobile { height: 100%; overflow: hidden; }
+    html.is-mobile body {
+      height: 100%; height: 100dvh; overflow: hidden;
+      touch-action: manipulation;
+    }
     body { font-family: 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif; background: #1a1a2e; color: #eee; }
 
     #header {
@@ -42,6 +47,11 @@
     }
     .is-desktop #bottomSheet { display: none; }
 
+    .is-mobile #header {
+      padding-top: max(8px, env(safe-area-inset-top));
+      padding-left: max(14px, env(safe-area-inset-left));
+      padding-right: max(14px, env(safe-area-inset-right));
+    }
     .is-mobile #main { display: flex; height: calc(100dvh - 48px); position: relative; }
     .is-mobile #map { flex: 1; width: 100%; }
     .is-mobile #sidebar { display: none; }
@@ -56,7 +66,11 @@
       transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
       display: flex; flex-direction: column;
       padding-bottom: env(safe-area-inset-bottom);
-      overflow-y: auto;
+      will-change: transform;
+    }
+    .is-mobile #bottomSheet > div:last-child {
+      flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch;
+      overscroll-behavior-y: contain;
     }
     .is-mobile #bottomSheet.mid { transform: translateY(calc(100% - 45dvh - env(safe-area-inset-bottom))); }
     .is-mobile #bottomSheet.full { transform: translateY(0); }
@@ -205,10 +219,11 @@
        ============================================================ */
     @media (max-width: 768px) {
       /* 헤더 축소 */
-      #header { padding: 8px 14px; }
-      #header h1 { font-size: 1em; }
+      #header { padding: 8px 14px; height: auto; }
+      #header h1 { font-size: 0.95em; }
       #header p { display: none; }
-      #brand { font-size: 0.7em; }
+      #brand { font-size: 0.65em; }
+      #mapSelector { font-size: 0.72em !important; padding: 4px 6px !important; }
 
       /* 패널 내용 간격 조정 */
       .panel { padding: 10px 14px; }
@@ -222,6 +237,13 @@
       .companion-item { font-size: 0.72em; }
       .mode-btn { padding: 8px 4px; font-size: 0.82em; }
       .mode-hint { font-size: 0.66em; }
+
+      /* 터치 타겟 최적화 */
+      .route-item { min-height: 44px; padding: 10px 10px; }
+      .route-item:active { background: rgba(255,255,255,0.08); }
+      .route-toggle { width: 44px; height: 24px; border-radius: 12px; }
+      .route-toggle::after { width: 18px; height: 18px; }
+      .route-toggle.on::after { left: 23px; }
 
       /* Leaflet 팝업 모바일 */
       .leaflet-popup-content-wrapper { max-width: 260px; }
@@ -437,69 +459,69 @@
         <p class="mode-hint" id="modeHintMobile">전체 68개 지명을 지도에 표시합니다.</p>
 
         <div id="itemTogglesMobile">
-          <div class="route-item">
+          <div class="route-item" onclick="toggleItem('calling', document.getElementById('tog-calling-m'))">
             <div class="route-color" style="background:#FF6D00"></div>
             <div class="route-info">
               <div class="route-name">바울의 부르심</div>
               <div class="route-desc">행 9장; 갈 1:15-21</div>
             </div>
-            <button class="route-toggle" id="tog-calling-m" onclick="toggleItem('calling', this)"></button>
+            <button class="route-toggle" id="tog-calling-m" onclick="event.stopPropagation()"></button>
           </div>
-          <div class="route-item">
+          <div class="route-item" onclick="toggleItem('paul1', document.getElementById('tog-paul1-m'))">
             <div class="route-color" style="background:#FF3D00"></div>
             <div class="route-info">
               <div class="route-name">바울 제1차 전도여행</div>
               <div class="route-desc">행 13–14장</div>
             </div>
-            <button class="route-toggle" id="tog-paul1-m" onclick="toggleItem('paul1', this)"></button>
+            <button class="route-toggle" id="tog-paul1-m" onclick="event.stopPropagation()"></button>
           </div>
-          <div class="route-item">
+          <div class="route-item" onclick="toggleItem('paul2', document.getElementById('tog-paul2-m'))">
             <div class="route-color" style="background:#00E5FF"></div>
             <div class="route-info">
               <div class="route-name">바울 제2차 전도여행</div>
               <div class="route-desc">행 15:36–18:22</div>
             </div>
-            <button class="route-toggle" id="tog-paul2-m" onclick="toggleItem('paul2', this)"></button>
+            <button class="route-toggle" id="tog-paul2-m" onclick="event.stopPropagation()"></button>
           </div>
-          <div class="route-item">
+          <div class="route-item" onclick="toggleItem('paul3', document.getElementById('tog-paul3-m'))">
             <div class="route-color" style="background:#00E676"></div>
             <div class="route-info">
               <div class="route-name">바울 제3차 전도여행</div>
               <div class="route-desc">행 18:23–21:17</div>
             </div>
-            <button class="route-toggle" id="tog-paul3-m" onclick="toggleItem('paul3', this)"></button>
+            <button class="route-toggle" id="tog-paul3-m" onclick="event.stopPropagation()"></button>
           </div>
-          <div class="route-item">
+          <div class="route-item" onclick="toggleItem('paul4', document.getElementById('tog-paul4-m'))">
             <div class="route-color" style="background:#D500F9"></div>
             <div class="route-info">
               <div class="route-name">바울 제4차 전도여행</div>
               <div class="route-desc">행 27–28장</div>
             </div>
-            <button class="route-toggle" id="tog-paul4-m" onclick="toggleItem('paul4', this)"></button>
+            <button class="route-toggle" id="tog-paul4-m" onclick="event.stopPropagation()"></button>
           </div>
-          <div class="route-item">
+          <div class="route-item" onclick="toggleItem('philip', document.getElementById('tog-philip-m'))">
             <div class="route-color" style="background:#FFD600"></div>
             <div class="route-info">
               <div class="route-name">빌립의 이동 경로</div>
               <div class="route-desc">행 8장</div>
             </div>
-            <button class="route-toggle" id="tog-philip-m" onclick="toggleItem('philip', this)"></button>
+            <button class="route-toggle" id="tog-philip-m" onclick="event.stopPropagation()"></button>
           </div>
-          <div class="route-item">
+          <div class="route-item" onclick="toggleItem('peter', document.getElementById('tog-peter-m'))">
             <div class="route-color" style="background:#FF4081"></div>
             <div class="route-info">
               <div class="route-name">베드로의 이동 경로</div>
               <div class="route-desc">행 9–10장</div>
             </div>
-            <button class="route-toggle" id="tog-peter-m" onclick="toggleItem('peter', this)"></button>
+            <button class="route-toggle" id="tog-peter-m" onclick="event.stopPropagation()"></button>
           </div>
-          <div class="route-item" id="commonItemMobile" style="display:none;">
+          <div class="route-item" id="commonItemMobile" onclick="toggleItem('common', document.getElementById('tog-common-m'))">
             <div class="route-color" style="background:#FF1744"></div>
             <div class="route-info">
-              <div class="route-name">공통·주요 지명</div>
-              <div class="route-desc">예루살렘, 다메섹, 가이사랴</div>
+              <div class="route-name">모든 지명</div>
+              <div class="route-desc">전체 68개 지명 표시</div>
             </div>
-            <button class="route-toggle" id="tog-common-m" onclick="toggleItem('common', this)"></button>
+            <button class="route-toggle on" id="tog-common-m" onclick="event.stopPropagation()"></button>
           </div>
         </div>
       </div>
@@ -1165,7 +1187,7 @@ Object.keys(routeStyles).forEach(key => {
 });
 
 const routeLineLayers = {};
-const activeItems = { calling:false, paul1:false, paul2:false, paul3:false, paul4:false, philip:false, peter:false, common:false };
+const activeItems = { calling:false, paul1:false, paul2:false, paul3:false, paul4:false, philip:false, peter:false, common:true };
 
 function buildArrow(coords, color) {
   const mid = Math.floor(coords.length / 2);
@@ -1202,11 +1224,7 @@ Object.keys(routeDefs).forEach(key => {
     // split 경로(paul1, paul2, paul3)는 화살표 생략 — 실선/점선으로 방향 구분
   } else {
     grp.addLayer(L.polyline(d.coords, { color: d.color, weight: d.weight, dashArray: d.dashArray, opacity: 0.9 }));
-    // paul4는 화살표 생략 — 실선 경로로 방향 표시
-    if (key !== 'paul4') {
-      const arrow = buildArrow(d.coords, d.color);
-      if (arrow) grp.addLayer(arrow);
-    }
+    // 화살표 생략 — 경로 라인만 표시
   }
   routeLineLayers[key] = grp;
 });
@@ -1227,11 +1245,19 @@ function refreshMarkers() {
     currentMarkerMode = 'numbered';
     spotGroups[activeRoutes[0]].addTo(map);
   } else if (activeRoutes.length === 0) {
+    // 경로 없을 때: common 활성이면 모든 지명 표시
     currentMarkerMode = 'dots';
+    if (activeItems.common) { allPlacesGroup.addTo(map); }
   } else {
     currentMarkerMode = 'dots';
     allPlacesGroup.addTo(map);
   }
+
+  // common 토글 버튼 상태 동기화
+  const togCommon = document.getElementById('tog-common');
+  const togCommonM = document.getElementById('tog-common-m');
+  if (togCommon) { activeItems.common ? togCommon.classList.add('on') : togCommon.classList.remove('on'); }
+  if (togCommonM) { activeItems.common ? togCommonM.classList.add('on') : togCommonM.classList.remove('on'); }
 }
 
 function setViewMode(mode) {
@@ -1253,8 +1279,8 @@ function setViewMode(mode) {
   refreshMarkers();
 
   if (mode === 'route') {
-    if (commonItem) commonItem.style.display = 'none';
-    if (commonItemMobile) commonItemMobile.style.display = 'none';
+    if (commonItem) commonItem.style.display = 'flex';
+    if (commonItemMobile) commonItemMobile.style.display = 'flex';
     if (hint) hint.textContent = '이동 경로를 선으로 표시합니다. 개별 경로를 켜고 끌 수 있습니다.';
     if (hintMobile) hintMobile.textContent = '이동 경로를 선으로 표시합니다. 개별 경로를 켜고 끌 수 있습니다.';
     if (btnRoute) btnRoute.classList.add('active');
@@ -1282,15 +1308,46 @@ function setViewMode(mode) {
 
 function toggleItem(key, btn) {
   if (activeItems[key]) {
+    // 끄기
     if (routeLineLayers[key]) { map.removeLayer(routeLineLayers[key]); }
     activeItems[key] = false;
     btn.classList.remove('on');
+    // 동일 키의 데스크톱/모바일 버튼 동기화
+    const otherId = btn.id.endsWith('-m') ? btn.id.replace('-m','') : btn.id + '-m';
+    const otherBtn = document.getElementById(otherId);
+    if (otherBtn) otherBtn.classList.remove('on');
   } else {
+    // 켜기
+    if (key === 'common') {
+      // '모든 지명' 켤 때 → 모든 경로 끄기
+      routeKeys.forEach(rk => {
+        if (activeItems[rk]) {
+          activeItems[rk] = false;
+          if (routeLineLayers[rk]) map.removeLayer(routeLineLayers[rk]);
+          const b = document.getElementById('tog-' + rk);
+          const bm = document.getElementById('tog-' + rk + '-m');
+          if (b) b.classList.remove('on');
+          if (bm) bm.classList.remove('on');
+        }
+      });
+    } else {
+      // 경로 켤 때 → '모든 지명' 끄기
+      if (activeItems.common) {
+        activeItems.common = false;
+        const tc = document.getElementById('tog-common');
+        const tcm = document.getElementById('tog-common-m');
+        if (tc) tc.classList.remove('on');
+        if (tcm) tcm.classList.remove('on');
+      }
+    }
     if (currentViewMode === 'route' && routeLineLayers[key]) {
       routeLineLayers[key].addTo(map);
     }
     activeItems[key] = true;
     btn.classList.add('on');
+    const otherId = btn.id.endsWith('-m') ? btn.id.replace('-m','') : btn.id + '-m';
+    const otherBtn = document.getElementById(otherId);
+    if (otherBtn) otherBtn.classList.add('on');
   }
   refreshMarkers();
 }
@@ -1307,6 +1364,14 @@ function resetAll() {
     if (btn) btn.classList.remove('on');
     if (btnMobile) btnMobile.classList.remove('on');
   });
+  // 초기화 시 '모든 지명' 활성화
+  activeItems.common = true;
+  allPlacesGroup.addTo(map);
+  const tc = document.getElementById('tog-common');
+  const tcm = document.getElementById('tog-common-m');
+  if (tc) tc.classList.add('on');
+  if (tcm) tcm.classList.add('on');
+
   map.fitBounds([[28.0, 10.0], [42.0, 45.0]]);
 
   setViewMode('spot');
@@ -1406,9 +1471,11 @@ if (isMobileDevice) {
 }
 
 // ============================================================
-// 초기화: 지명 모드(spot)로 시작
+// 초기화: 경로 모드로 시작, '모든 지명' 활성화
 // ============================================================
 map.fitBounds([[28.0, 10.0], [42.0, 45.0]]);
+activeItems.common = true;
+allPlacesGroup.addTo(map);
 setViewMode('spot');
 </script>
 </body>
