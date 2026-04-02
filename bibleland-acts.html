@@ -96,13 +96,13 @@
     }
     .mode-icon { font-size: 1.1em; margin-right: 4px; }
     .mode-hint {
-      font-size: 0.7em; color: #666; margin: 0 0 10px 0;
+      font-size: 0.78em; color: #666; margin: 0 0 10px 0;
       padding: 6px 8px; background: rgba(255,255,255,0.03);
-      border-radius: 4px; line-height: 1.4; border-left: 3px solid #e94560;
+      border-radius: 4px; line-height: 1.5; border-left: 3px solid #e94560;
     }
 
     .panel { padding: 14px 16px; border-bottom: 1px solid #0f3460; }
-    .panel h2 { font-size: 0.88em; color: #e94560; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 1px; }
+    .panel h2 { font-size: 0.95em; color: #e94560; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 1px; }
 
     .route-item {
       display: flex; align-items: flex-start; gap: 8px;
@@ -112,8 +112,8 @@
     .route-item:hover { background: rgba(255,255,255,0.05); }
     .route-color { width: 13px; height: 13px; border-radius: 50%; flex-shrink: 0; margin-top: 3px; border: 2px solid rgba(255,255,255,0.3); }
     .route-info { flex: 1; }
-    .route-name { font-size: 0.85em; font-weight: bold; color: #fff; }
-    .route-desc { font-size: 0.72em; color: #888; margin-top: 2px; line-height: 1.4; }
+    .route-name { font-size: 0.95em; font-weight: bold; color: #fff; }
+    .route-desc { font-size: 0.80em; color: #888; margin-top: 2px; line-height: 1.5; }
     .route-toggle {
       width: 34px; height: 18px; border-radius: 9px; background: #333; position: relative;
       cursor: pointer; flex-shrink: 0; border: none; outline: none; transition: background 0.3s;
@@ -127,15 +127,15 @@
 
     #routePanel { transition: all 0.3s; }
 
-    .info-box { background: rgba(255,255,255,0.05); border-radius: 8px; padding: 10px; margin-top: 6px; font-size: 0.77em; color: #ccc; line-height: 1.6; }
-    .companion-item { font-size: 0.76em; color: #aaa; padding: 3px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
+    .info-box { background: rgba(255,255,255,0.05); border-radius: 8px; padding: 10px; margin-top: 6px; font-size: 0.84em; color: #ccc; line-height: 1.65; }
+    .companion-item { font-size: 0.82em; color: #aaa; padding: 4px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
     .companion-item:last-child { border-bottom: none; }
     .companion-name { color: #4dd0e1; font-weight: bold; }
     .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; margin-top: 7px; }
     .stat-item { background: rgba(255,255,255,0.05); border-radius: 6px; padding: 7px; text-align: center; }
     .stat-num { font-size: 1.3em; font-weight: bold; color: #e94560; }
-    .stat-label { font-size: 0.68em; color: #888; margin-top: 2px; }
-    .legend-note { font-size: 0.71em; color: #666; margin-top: 7px; line-height: 1.55; }
+    .stat-label { font-size: 0.75em; color: #888; margin-top: 2px; }
+    .legend-note { font-size: 0.78em; color: #666; margin-top: 7px; line-height: 1.6; }
 
     /* ── 아코디언 (모바일 동행자/안내) ── */
     .accordion-header {
@@ -191,7 +191,7 @@
     .leaflet-popup-content { margin: 12px 16px; }
     .popup-num { display: inline-block; font-size: 1.1em; font-weight: bold; margin-right: 6px; }
     .popup-title { font-size: 1em; font-weight: bold; color: #e94560; margin-bottom: 5px; }
-    .popup-verse { font-size: 0.79em; color: #4dd0e1; margin-bottom: 5px; position: relative; }
+    .popup-verse { font-size: 0.85em; color: #4dd0e1; margin-bottom: 5px; position: relative; }
     .popup-verse .verse-ref {
       cursor: help; border-bottom: 1px dotted #4dd0e1;
       position: relative; display: inline-block;
@@ -205,8 +205,8 @@
       white-space: normal; margin-bottom: 4px;
     }
     .popup-verse .verse-ref:hover .verse-tooltip { display: block; }
-    .popup-desc { font-size: 0.81em; color: #ccc; line-height: 1.5; }
-    .popup-photo { font-size: 0.72em; color: #666; margin-top: 8px; border-top: 1px solid #333; padding-top: 6px; }
+    .popup-desc { font-size: 0.88em; color: #ccc; line-height: 1.6; }
+    .popup-photo { font-size: 0.78em; color: #666; margin-top: 8px; border-top: 1px solid #333; padding-top: 6px; }
 
     /* ── 모바일 드래그 핸들 ── */
     .is-mobile #dragHandle {
@@ -228,28 +228,53 @@
     .is-desktop #dragHandle { display: none; }
 
     /* ============================================================
+       아이패드 반응형 (769~1024px)
+       ============================================================ */
+    @media (min-width: 769px) and (max-width: 1024px) {
+      body { font-size: 17px; }
+      .is-desktop #sidebar { width: 340px; }
+      .panel h2 { font-size: 1em; }
+      .route-name { font-size: 1em; }
+      .route-desc { font-size: 0.85em; line-height: 1.55; }
+      .info-box { font-size: 0.88em; line-height: 1.7; }
+      .companion-item { font-size: 0.86em; }
+      .stat-label { font-size: 0.78em; }
+      .legend-note { font-size: 0.82em; }
+      .mode-btn { font-size: 0.95em; }
+      .mode-hint { font-size: 0.82em; }
+      /* 팝업 */
+      .leaflet-popup-content-wrapper { max-width: 330px; }
+      .popup-title { font-size: 1.05em; }
+      .popup-verse { font-size: 0.9em; }
+      .popup-desc { font-size: 0.92em; line-height: 1.65; }
+      .popup-photo { font-size: 0.82em; }
+    }
+
+    /* ============================================================
        모바일 반응형 (768px 이하)
        ============================================================ */
     @media (max-width: 768px) {
+      body { font-size: 15px; }
+
       /* 헤더 축소 */
       #header { padding: 8px 14px; height: auto; }
-      #header h1 { font-size: 0.95em; }
+      #header h1 { font-size: 1em; }
       #header p { display: none; }
-      #brand { font-size: 0.65em; }
-      #mapSelector { font-size: 0.72em !important; padding: 4px 6px !important; }
+      #brand { font-size: 0.7em; }
+      #mapSelector { font-size: 0.75em !important; padding: 4px 6px !important; }
 
-      /* 패널 내용 간격 조정 */
+      /* 패널 내용 */
       .panel { padding: 10px 14px; }
-      .panel h2 { font-size: 0.82em; margin-bottom: 8px; }
-      .route-name { font-size: 0.82em; }
-      .route-desc { font-size: 0.7em; }
+      .panel h2 { font-size: 0.9em; margin-bottom: 8px; }
+      .route-name { font-size: 0.92em; }
+      .route-desc { font-size: 0.78em; line-height: 1.5; }
       .stat-grid { grid-template-columns: 1fr 1fr 1fr 1fr; gap: 5px; }
-      .stat-num { font-size: 1.1em; }
-      .stat-label { font-size: 0.62em; }
-      .info-box { font-size: 0.73em; padding: 8px; }
-      .companion-item { font-size: 0.72em; }
-      .mode-btn { padding: 8px 4px; font-size: 0.82em; }
-      .mode-hint { font-size: 0.66em; }
+      .stat-num { font-size: 1.2em; }
+      .stat-label { font-size: 0.72em; }
+      .info-box { font-size: 0.82em; padding: 8px; line-height: 1.65; }
+      .companion-item { font-size: 0.80em; }
+      .mode-btn { padding: 8px 4px; font-size: 0.88em; }
+      .mode-hint { font-size: 0.74em; line-height: 1.5; }
 
       /* 터치 타겟 최적화 */
       .route-item { min-height: 44px; padding: 10px 10px; }
@@ -259,10 +284,12 @@
       .route-toggle.on::after { left: 23px; }
 
       /* Leaflet 팝업 모바일 */
-      .leaflet-popup-content-wrapper { max-width: 260px; }
+      .leaflet-popup-content-wrapper { max-width: 280px; }
       .leaflet-popup-content { margin: 10px 12px; }
-      .popup-title { font-size: 0.9em; }
-      .popup-desc { font-size: 0.76em; }
+      .popup-title { font-size: 1em; }
+      .popup-verse { font-size: 0.84em; }
+      .popup-desc { font-size: 0.84em; line-height: 1.6; }
+      .popup-photo { font-size: 0.76em; }
     }
   </style>
 </head>
