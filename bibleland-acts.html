@@ -24,7 +24,7 @@
     * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
     html.is-mobile { height: 100%; overflow: hidden; }
     html.is-mobile body {
-      height: 100%; height: 100dvh; overflow: hidden;
+      height: 100%; height: 100vh; height: 100dvh; overflow: hidden;
       touch-action: manipulation;
     }
     body { font-family: 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif; background: #1a1a2e; color: #eee; }
@@ -52,12 +52,12 @@
       padding-left: max(14px, env(safe-area-inset-left));
       padding-right: max(14px, env(safe-area-inset-right));
     }
-    .is-mobile #main { display: flex; height: calc(100dvh - 48px); position: relative; }
+    .is-mobile #main { display: flex; height: calc(100vh - 48px); height: calc(100dvh - 48px); position: relative; }
     .is-mobile #map { flex: 1; width: 100%; }
     .is-mobile #sidebar { display: none; }
     .is-mobile #bottomSheet {
       position: fixed; left: 0; right: 0; bottom: 0;
-      width: 100%; height: 85dvh; background: #16213e;
+      width: 100%; height: 85vh; height: 85dvh; background: #16213e;
       border-radius: 16px 16px 0 0;
       border-top: 2px solid #e94560;
       box-shadow: 0 -4px 24px rgba(0,0,0,0.6);
@@ -72,7 +72,7 @@
       flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch;
       overscroll-behavior-y: contain;
     }
-    .is-mobile #bottomSheet.mid { transform: translateY(calc(100% - 45dvh - env(safe-area-inset-bottom))); }
+    .is-mobile #bottomSheet.mid { transform: translateY(calc(100% - 45vh - env(safe-area-inset-bottom))); transform: translateY(calc(100% - 45dvh - env(safe-area-inset-bottom))); }
     .is-mobile #bottomSheet.full { transform: translateY(0); }
 
     /* ── 경로/지명 모드 전환 버튼 ── */
@@ -1365,9 +1365,9 @@ let currentViewMode = 'spot';
 function refreshMarkers() {
   const activeRoutes = routeKeys.filter(k => activeItems[k]);
 
-  map.removeLayer(allPlacesGroup);
-  routeKeys.forEach(key => map.removeLayer(spotGroups[key]));
-  map.removeLayer(spotGroups.common);
+  if (map.hasLayer(allPlacesGroup)) map.removeLayer(allPlacesGroup);
+  routeKeys.forEach(key => { if (map.hasLayer(spotGroups[key])) map.removeLayer(spotGroups[key]); });
+  if (map.hasLayer(spotGroups.common)) map.removeLayer(spotGroups.common);
 
   if (activeRoutes.length === 1) {
     currentMarkerMode = 'numbered';
@@ -1399,7 +1399,7 @@ function setViewMode(mode) {
 
   routeKeys.forEach(key => {
     if (mode === 'route' && activeItems[key]) { routeLineLayers[key].addTo(map); }
-    else { map.removeLayer(routeLineLayers[key]); }
+    else { if (map.hasLayer(routeLineLayers[key])) map.removeLayer(routeLineLayers[key]); }
   });
 
   refreshMarkers();
@@ -1433,7 +1433,7 @@ function toggleItem(key, btn) {
     // ACTS 지명은 끌 수 없음 (항상 기본 활성화)
     if (key === 'common') return;
     // 이미 켜져 있으면 끄기
-    if (routeLineLayers[key]) { map.removeLayer(routeLineLayers[key]); }
+    if (routeLineLayers[key] && map.hasLayer(routeLineLayers[key])) { map.removeLayer(routeLineLayers[key]); }
     activeItems[key] = false;
     btn.classList.remove('on');
     const otherId = btn.id.endsWith('-m') ? btn.id.replace('-m','') : btn.id + '-m';
@@ -1447,7 +1447,7 @@ function toggleItem(key, btn) {
     allKeys.forEach(k => {
       if (activeItems[k]) {
         activeItems[k] = false;
-        if (routeLineLayers[k]) map.removeLayer(routeLineLayers[k]);
+        if (routeLineLayers[k] && map.hasLayer(routeLineLayers[k])) map.removeLayer(routeLineLayers[k]);
         const b = document.getElementById('tog-' + k);
         const bm = document.getElementById('tog-' + k + '-m');
         if (b) b.classList.remove('on');
@@ -1478,10 +1478,10 @@ function activateCommon() {
 
 function resetAll() {
   Object.keys(activeItems).forEach(key => { activeItems[key] = false; });
-  routeKeys.forEach(key => { if (routeLineLayers[key]) map.removeLayer(routeLineLayers[key]); });
-  map.removeLayer(allPlacesGroup);
-  routeKeys.forEach(key => map.removeLayer(spotGroups[key]));
-  map.removeLayer(spotGroups.common);
+  routeKeys.forEach(key => { if (routeLineLayers[key] && map.hasLayer(routeLineLayers[key])) map.removeLayer(routeLineLayers[key]); });
+  if (map.hasLayer(allPlacesGroup)) map.removeLayer(allPlacesGroup);
+  routeKeys.forEach(key => { if (map.hasLayer(spotGroups[key])) map.removeLayer(spotGroups[key]); });
+  if (map.hasLayer(spotGroups.common)) map.removeLayer(spotGroups.common);
   Object.keys(activeItems).forEach(key => {
     const btn = document.getElementById('tog-' + key);
     const btnMobile = document.getElementById('tog-' + key + '-m');
