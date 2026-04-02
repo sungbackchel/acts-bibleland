@@ -489,7 +489,7 @@
               <div class="route-name">ACTS 지명</div>
               <div class="route-desc">전체 67개 지명 표시</div>
             </div>
-            <button class="route-toggle on" id="tog-common-m" onclick="event.stopPropagation()"></button>
+            <button class="route-toggle on" id="tog-common-m" onclick="event.stopPropagation(); toggleItem('common', this)"></button>
           </div>
           <div class="route-item" onclick="toggleItem('calling', document.getElementById('tog-calling-m'))">
             <div class="route-color" style="background:#FF8F00"></div>
@@ -497,7 +497,7 @@
               <div class="route-name">바울의 부르심</div>
               <div class="route-desc">행 9장; 갈 1:15-21</div>
             </div>
-            <button class="route-toggle" id="tog-calling-m" onclick="event.stopPropagation()"></button>
+            <button class="route-toggle" id="tog-calling-m" onclick="event.stopPropagation(); toggleItem('calling', this)"></button>
           </div>
           <div class="route-item" onclick="toggleItem('paul1', document.getElementById('tog-paul1-m'))">
             <div class="route-color" style="background:#D32F2F"></div>
@@ -505,7 +505,7 @@
               <div class="route-name">바울 제1차 전도여행</div>
               <div class="route-desc">행 13–14장</div>
             </div>
-            <button class="route-toggle" id="tog-paul1-m" onclick="event.stopPropagation()"></button>
+            <button class="route-toggle" id="tog-paul1-m" onclick="event.stopPropagation(); toggleItem('paul1', this)"></button>
           </div>
           <div class="route-item" onclick="toggleItem('paul2', document.getElementById('tog-paul2-m'))">
             <div class="route-color" style="background:#039BE5"></div>
@@ -513,7 +513,7 @@
               <div class="route-name">바울 제2차 전도여행</div>
               <div class="route-desc">행 15:36–18:22</div>
             </div>
-            <button class="route-toggle" id="tog-paul2-m" onclick="event.stopPropagation()"></button>
+            <button class="route-toggle" id="tog-paul2-m" onclick="event.stopPropagation(); toggleItem('paul2', this)"></button>
           </div>
           <div class="route-item" onclick="toggleItem('paul3', document.getElementById('tog-paul3-m'))">
             <div class="route-color" style="background:#43A047"></div>
@@ -521,7 +521,7 @@
               <div class="route-name">바울 제3차 전도여행</div>
               <div class="route-desc">행 18:23–21:17</div>
             </div>
-            <button class="route-toggle" id="tog-paul3-m" onclick="event.stopPropagation()"></button>
+            <button class="route-toggle" id="tog-paul3-m" onclick="event.stopPropagation(); toggleItem('paul3', this)"></button>
           </div>
           <div class="route-item" onclick="toggleItem('paul4', document.getElementById('tog-paul4-m'))">
             <div class="route-color" style="background:#AB47BC"></div>
@@ -529,7 +529,7 @@
               <div class="route-name">바울 제4차 전도여행</div>
               <div class="route-desc">행 27–28장</div>
             </div>
-            <button class="route-toggle" id="tog-paul4-m" onclick="event.stopPropagation()"></button>
+            <button class="route-toggle" id="tog-paul4-m" onclick="event.stopPropagation(); toggleItem('paul4', this)"></button>
           </div>
           <div class="route-item" onclick="toggleItem('philip', document.getElementById('tog-philip-m'))">
             <div class="route-color" style="background:#FFB300"></div>
@@ -537,7 +537,7 @@
               <div class="route-name">빌립의 이동 경로</div>
               <div class="route-desc">행 8장</div>
             </div>
-            <button class="route-toggle" id="tog-philip-m" onclick="event.stopPropagation()"></button>
+            <button class="route-toggle" id="tog-philip-m" onclick="event.stopPropagation(); toggleItem('philip', this)"></button>
           </div>
           <div class="route-item" onclick="toggleItem('peter', document.getElementById('tog-peter-m'))">
             <div class="route-color" style="background:#EC407A"></div>
@@ -545,7 +545,7 @@
               <div class="route-name">베드로의 이동 경로</div>
               <div class="route-desc">행 9–10장</div>
             </div>
-            <button class="route-toggle" id="tog-peter-m" onclick="event.stopPropagation()"></button>
+            <button class="route-toggle" id="tog-peter-m" onclick="event.stopPropagation(); toggleItem('peter', this)"></button>
           </div>
         </div>
       </div>
