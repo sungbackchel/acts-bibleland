@@ -1430,6 +1430,8 @@ function setViewMode(mode) {
 
 function toggleItem(key, btn) {
   if (activeItems[key]) {
+    // ACTS 지명은 끌 수 없음 (항상 기본 활성화)
+    if (key === 'common') return;
     // 이미 켜져 있으면 끄기
     if (routeLineLayers[key]) { map.removeLayer(routeLineLayers[key]); }
     activeItems[key] = false;
@@ -1437,6 +1439,8 @@ function toggleItem(key, btn) {
     const otherId = btn.id.endsWith('-m') ? btn.id.replace('-m','') : btn.id + '-m';
     const otherBtn = document.getElementById(otherId);
     if (otherBtn) otherBtn.classList.remove('on');
+    // 경로를 끄면 → ACTS 지명 자동 활성화
+    activateCommon();
   } else {
     // 켜기 — 먼저 다른 모든 항목 끄기 (라디오 버튼 방식)
     const allKeys = routeKeys.concat(['common']);
@@ -1461,6 +1465,15 @@ function toggleItem(key, btn) {
     if (otherBtn) otherBtn.classList.add('on');
   }
   refreshMarkers();
+}
+
+// ACTS 지명 자동 활성화 헬퍼
+function activateCommon() {
+  activeItems['common'] = true;
+  const b = document.getElementById('tog-common');
+  const bm = document.getElementById('tog-common-m');
+  if (b) b.classList.add('on');
+  if (bm) bm.classList.add('on');
 }
 
 function resetAll() {
