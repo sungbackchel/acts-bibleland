@@ -31,12 +31,12 @@
 
     #header {
       background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
-      padding: 14px 24px;
+      padding: 10px 20px;
       border-bottom: 2px solid #e94560;
       display: flex; align-items: center; justify-content: space-between;
     }
-    #header h1 { font-size: 1.3em; color: #fff; letter-spacing: 1px; }
-    #header p { font-size: 0.78em; color: #aaa; margin-top: 3px; }
+    #header h1 { font-size: 1.1em; color: #fff; letter-spacing: 0.5px; margin:0; line-height:1.3; }
+    #header p { font-size: 0.68em; color: #99a; margin-top: 3px; letter-spacing: 0.3px; }
     #brand { font-size: 0.75em; color: #e94560; font-weight: bold; letter-spacing: 2px; }
 
     .is-desktop #main { display: flex; height: calc(100vh - 68px); }
@@ -77,12 +77,12 @@
 
     /* ── 경로/지명 모드 전환 버튼 ── */
     .mode-switch {
-      display: flex; gap: 6px; margin-bottom: 10px;
+      display: flex; gap: 5px; margin-bottom: 8px;
     }
     .mode-btn {
-      flex: 1; padding: 10px 6px; border-radius: 8px;
+      flex: 1; padding: 7px 5px; border-radius: 6px;
       border: 2px solid #0f3460; background: #1a2a4a;
-      color: #888; font-size: 0.88em; font-weight: bold;
+      color: #888; font-size: 0.82em; font-weight: bold;
       cursor: pointer; transition: all 0.25s;
       font-family: 'Malgun Gothic', sans-serif;
       letter-spacing: 0.5px; text-align: center;
@@ -95,12 +95,6 @@
       background: #1e3a6a; color: #fff; border-color: #4dd0e1;
     }
     .mode-icon { font-size: 1.1em; margin-right: 4px; }
-    .mode-hint {
-      font-size: 0.78em; color: #666; margin: 0 0 10px 0;
-      padding: 6px 8px; background: rgba(255,255,255,0.03);
-      border-radius: 4px; line-height: 1.5; border-left: 3px solid #e94560;
-    }
-
     .panel { padding: 14px 16px; border-bottom: 1px solid #0f3460; }
     .panel h2 { font-size: 0.95em; color: #e94560; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 1px; }
 
@@ -149,6 +143,11 @@
 
     /* ── Leaflet divIcon 0x0 컨테이너 오버플로우 허용 ── */
     .leaflet-marker-icon { overflow: visible !important; }
+    .leaflet-control-attribution {
+      bottom: 6px !important; position: relative;
+      font-size: 11px; background: rgba(255,255,255,0.7) !important;
+      padding: 2px 8px !important;
+    }
 
     /* ── 마커 라벨 스타일 ── */
     .place-label-wrap {
@@ -160,19 +159,19 @@
       font-weight: bold; flex-shrink: 0;
       border: none;
       font-family: 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif;
-      text-shadow: 0 0 4px rgba(0,0,0,0.9), 0 0 8px rgba(0,0,0,0.6);
+      text-shadow: 0 0 3px rgba(255,255,255,0.9), 0 0 6px rgba(255,255,255,0.5);
       pointer-events: auto; cursor: pointer;
     }
     .place-name-label {
-      background: rgba(15,20,40,0.60);
+      background: rgba(15,20,40,0.45);
       color: #fff; font-family: 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif;
       font-weight: 500;
       padding: 2px 7px; border-radius: 4px;
       white-space: nowrap; display: inline-block;
       margin-left: 4px;
       border: none;
-      text-shadow: 0 1px 2px rgba(0,0,0,0.6);
-      box-shadow: 0 1px 4px rgba(0,0,0,0.4);
+      text-shadow: 0 1px 1px rgba(0,0,0,0.3);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.25);
       pointer-events: auto; cursor: pointer;
     }
     /* 점(dot) 모드일 때는 세로 배치 */
@@ -240,8 +239,7 @@
       .companion-item { font-size: 0.86em; }
       .stat-label { font-size: 0.78em; }
       .legend-note { font-size: 0.82em; }
-      .mode-btn { font-size: 0.95em; }
-      .mode-hint { font-size: 0.82em; }
+      .mode-btn { padding: 7px 5px; font-size: 0.88em; }
       /* 팝업 */
       .leaflet-popup-content-wrapper { max-width: 330px; }
       .popup-title { font-size: 1.05em; }
@@ -273,8 +271,7 @@
       .stat-label { font-size: 0.72em; }
       .info-box { font-size: 0.82em; padding: 8px; line-height: 1.65; }
       .companion-item { font-size: 0.80em; }
-      .mode-btn { padding: 8px 4px; font-size: 0.88em; }
-      .mode-hint { font-size: 0.74em; line-height: 1.5; }
+      .mode-btn { padding: 6px 4px; font-size: 0.82em; }
 
       /* 터치 타겟 최적화 */
       .route-item { min-height: 44px; padding: 10px 10px; }
@@ -296,9 +293,12 @@
 <body>
 
 <div id="header">
-  <div>
-    <h1>📍 성경지리로 보는 사도행전</h1>
-    <p>Acts of the Apostles — Biblical Geography Movement Map</p>
+  <div style="display:flex;align-items:center;gap:14px;">
+    <img src="자료/엠블럼_W.png" alt="BIBLELAND 로고" style="height:40px;width:auto;flex-shrink:0;opacity:0.95;">
+    <div style="border-left:1px solid rgba(255,255,255,0.2);padding-left:12px;">
+      <h1>성경지리로 보는 사도행전</h1>
+      <p>Biblical Geography Map — ACTS</p>
+    </div>
   </div>
   <div style="display:flex;align-items:center;gap:12px;">
     <select id="mapSelector" onchange="switchMapLayer(this.value)" style="padding:5px 10px;border-radius:6px;border:1px solid #e94560;background:#1a1a2e;color:#e94560;font-size:0.78em;font-weight:bold;cursor:pointer;font-family:'Malgun Gothic',sans-serif;transition:all 0.2s;white-space:nowrap;outline:none;">
@@ -309,7 +309,6 @@
       <option value="esri_street" style="background:#1a1a2e;color:#e94560;">🌿 거리 (Esri)</option>
       <option value="esri_imagery" style="background:#1a1a2e;color:#e94560;">🛰 위성 (Esri)</option>
     </select>
-    <div id="brand">BIBLELAND™</div>
   </div>
 </div>
 
@@ -319,13 +318,7 @@
   <!-- Desktop Sidebar -->
   <div id="sidebar">
 
-    <!-- 경로 표시 설정 -->
     <div class="panel" id="routePanel">
-      <h2 style="display:flex;align-items:center;justify-content:space-between;">
-        <span>🗺 경로 표시 설정</span>
-        <button onclick="resetAll()" style="font-size:0.7em;padding:3px 10px;border-radius:5px;border:1px solid #e94560;background:transparent;color:#e94560;cursor:pointer;font-family:'Malgun Gothic',sans-serif;letter-spacing:0.5px;transition:all 0.2s;" onmouseover="this.style.background='#e94560';this.style.color='#fff'" onmouseout="this.style.background='transparent';this.style.color='#e94560'">초기화</button>
-      </h2>
-
       <!-- ▼ 지명 / 경로 전환 버튼 ▼ -->
       <div class="mode-switch">
         <button class="mode-btn active" id="modeSpotBtn" onclick="setViewMode('spot')">
@@ -335,12 +328,19 @@
           <span class="mode-icon">↝</span> 경로
         </button>
       </div>
-      <p class="mode-hint" id="modeHint">전체 67개 지명을 지도에 표시합니다.</p>
 
       <!-- ▼ 통합 토글 목록 ▼ -->
       <div id="itemToggles">
+        <div class="route-item" id="commonItem">
+          <div class="route-color" style="background:#EF5350"></div>
+          <div class="route-info">
+            <div class="route-name">ACTS 지명</div>
+            <div class="route-desc">전체 67개 지명 표시</div>
+          </div>
+          <button class="route-toggle on" id="tog-common" onclick="toggleItem('common', this)"></button>
+        </div>
         <div class="route-item">
-          <div class="route-color" style="background:#FF6D00"></div>
+          <div class="route-color" style="background:#FF8F00"></div>
           <div class="route-info">
             <div class="route-name">바울의 부르심</div>
             <div class="route-desc">행 9장; 갈 1:15-21 | 예루살렘→다메섹→아라비아→다소→안디옥</div>
@@ -348,7 +348,7 @@
           <button class="route-toggle" id="tog-calling" onclick="toggleItem('calling', this)"></button>
         </div>
         <div class="route-item">
-          <div class="route-color" style="background:#FF3D00"></div>
+          <div class="route-color" style="background:#D32F2F"></div>
           <div class="route-info">
             <div class="route-name">바울 제1차 전도여행</div>
             <div class="route-desc">행 13–14장 | 안디옥→구브로→소아시아→안디옥</div>
@@ -356,7 +356,7 @@
           <button class="route-toggle" id="tog-paul1" onclick="toggleItem('paul1', this)"></button>
         </div>
         <div class="route-item">
-          <div class="route-color" style="background:#00E5FF"></div>
+          <div class="route-color" style="background:#039BE5"></div>
           <div class="route-info">
             <div class="route-name">바울 제2차 전도여행</div>
             <div class="route-desc">행 15:36–18:22 | 안디옥→마게도냐→아가야→안디옥</div>
@@ -364,7 +364,7 @@
           <button class="route-toggle" id="tog-paul2" onclick="toggleItem('paul2', this)"></button>
         </div>
         <div class="route-item">
-          <div class="route-color" style="background:#00E676"></div>
+          <div class="route-color" style="background:#43A047"></div>
           <div class="route-info">
             <div class="route-name">바울 제3차 전도여행</div>
             <div class="route-desc">행 18:23–21:17 | 안디옥→에베소→마게도냐→헬라→예루살렘</div>
@@ -372,7 +372,7 @@
           <button class="route-toggle" id="tog-paul3" onclick="toggleItem('paul3', this)"></button>
         </div>
         <div class="route-item">
-          <div class="route-color" style="background:#D500F9"></div>
+          <div class="route-color" style="background:#AB47BC"></div>
           <div class="route-info">
             <div class="route-name">바울 제4차 전도여행 (로마압송)</div>
             <div class="route-desc">행 27–28장 | 가이사랴→멜리데→로마</div>
@@ -380,7 +380,7 @@
           <button class="route-toggle" id="tog-paul4" onclick="toggleItem('paul4', this)"></button>
         </div>
         <div class="route-item">
-          <div class="route-color" style="background:#FFD600"></div>
+          <div class="route-color" style="background:#FFB300"></div>
           <div class="route-info">
             <div class="route-name">빌립의 이동 경로</div>
             <div class="route-desc">행 8장 | 예루살렘→사마리아→가사→가이사랴</div>
@@ -388,20 +388,12 @@
           <button class="route-toggle" id="tog-philip" onclick="toggleItem('philip', this)"></button>
         </div>
         <div class="route-item">
-          <div class="route-color" style="background:#FF4081"></div>
+          <div class="route-color" style="background:#EC407A"></div>
           <div class="route-info">
             <div class="route-name">베드로의 이동 경로</div>
             <div class="route-desc">행 9–10장 | 예루살렘→룻다→욥바→가이사랴</div>
           </div>
           <button class="route-toggle" id="tog-peter" onclick="toggleItem('peter', this)"></button>
-        </div>
-        <div class="route-item" id="commonItem">
-          <div class="route-color" style="background:#FF1744"></div>
-          <div class="route-info">
-            <div class="route-name">모든 지명</div>
-            <div class="route-desc">전체 67개 지명 표시</div>
-          </div>
-          <button class="route-toggle on" id="tog-common" onclick="toggleItem('common', this)"></button>
         </div>
       </div>
     </div>
@@ -410,12 +402,11 @@
     <div class="panel">
       <h2>ℹ 사용 안내</h2>
       <p class="legend-note">
-        • <b style="color:#fff">경로</b> 선택 → 같은 목록에서 경로 라인 개별 켜기·끄기<br>
-        • <b style="color:#fff">지명</b> 선택 → 같은 목록에서 지명 마커 그룹 개별 켜기·끄기<br>
-        • 마커 클릭 시 지명 설명·성경 구절 팝업 표시<br>
-        • 마우스 휠: 확대/축소 | 드래그: 이동<br><br>
-        📷 사진 참고: bibleland.net 에서 지명 검색
+        • 마커 클릭 → 지명 설명·성경 구절 팝업<br>
+        • 마우스 휠: 확대/축소 | 드래그: 이동<br>
+        • 📷 사진: bibleland.net
       </p>
+      <p class="legend-note" style="margin-top:6px; font-size:0.75em; color:#555;">© 2026 Sung Backchel · BIBLELAND™</p>
     </div>
 
     <!-- 동행자 (접힘) -->
@@ -425,31 +416,31 @@
       </div>
       <div class="accordion-body" id="companionBody">
         <div class="info-box">
-          <div style="color:#FF6D00; font-weight:bold; margin-bottom:5px;">⓪ 바울의 부르심 (행 9장; 갈 1:15-21)</div>
+          <div style="color:#FF8F00; font-weight:bold; margin-bottom:5px;">⓪ 바울의 부르심 (행 9장; 갈 1:15-21)</div>
           <div class="companion-item"><span class="companion-name">아나니아</span> — 다메섹에서 바울에게 안수, 세례 (행 9:17-18)</div>
           <div class="companion-item"><span class="companion-name">바나바</span> — 안디옥으로 데려와 1년간 함께 가르침 (행 11:25-26)</div>
         </div>
         <div class="info-box" style="margin-top:6px;">
-          <div style="color:#FF3D00; font-weight:bold; margin-bottom:5px;">① 제1차 전도여행 (행 13–14장)</div>
+          <div style="color:#D32F2F; font-weight:bold; margin-bottom:5px;">① 제1차 전도여행 (행 13–14장)</div>
           <div class="companion-item"><span class="companion-name">바나바</span> — 전 여정 동행. 구브로 출신 레위인 (행 13:2)</div>
           <div class="companion-item"><span class="companion-name">요한 마가</span> — 안디옥→버가; 버가에서 이탈 (행 13:13)</div>
         </div>
         <div class="info-box" style="margin-top:6px;">
-          <div style="color:#00E5FF; font-weight:bold; margin-bottom:5px;">② 제2차 전도여행 (행 15:36–18:22)</div>
+          <div style="color:#039BE5; font-weight:bold; margin-bottom:5px;">② 제2차 전도여행 (행 15:36–18:22)</div>
           <div class="companion-item"><span class="companion-name">실라</span> — 전 여정 동행 (행 15:40)</div>
           <div class="companion-item"><span class="companion-name">디모데</span> — 루스드라 합류 (행 16:1)</div>
           <div class="companion-item"><span class="companion-name">누가</span> — 드로아 합류 추정 (행 16:10 "우리")</div>
           <div class="companion-item"><span class="companion-name">아굴라·브리스길라</span> — 고린도→에베소 (행 18:2,18)</div>
         </div>
         <div class="info-box" style="margin-top:6px;">
-          <div style="color:#00E676; font-weight:bold; margin-bottom:5px;">③ 제3차 전도여행 (행 18:23–21:17)</div>
+          <div style="color:#43A047; font-weight:bold; margin-bottom:5px;">③ 제3차 전도여행 (행 18:23–21:17)</div>
           <div class="companion-item"><span class="companion-name">디모데</span> — 동행 (행 19:22)</div>
           <div class="companion-item"><span class="companion-name">에라스도</span> — 마게도냐까지 (행 19:22)</div>
           <div class="companion-item"><span class="companion-name">소바더·아리스다고·세군도·가이오·두기고·드로비모</span> — 행 20:4</div>
           <div class="companion-item"><span class="companion-name">누가</span> — 빌립보 재합류 (행 20:6 "우리")</div>
         </div>
         <div class="info-box" style="margin-top:6px;">
-          <div style="color:#D500F9; font-weight:bold; margin-bottom:5px;">④ 제4차 전도여행 /로마압송 (행 27–28장)</div>
+          <div style="color:#AB47BC; font-weight:bold; margin-bottom:5px;">④ 제4차 전도여행 /로마압송 (행 27–28장)</div>
           <div class="companion-item"><span class="companion-name">아리스다고</span> — 데살로니가 출신 (행 27:2)</div>
           <div class="companion-item"><span class="companion-name">누가</span> — 저자 본인 "우리" (행 27:1)</div>
         </div>
@@ -481,13 +472,7 @@
     </div>
     <div style="overflow-y: auto; flex: 1;">
 
-      <!-- 경로 표시 설정 -->
       <div class="panel" id="routePanelMobile">
-        <h2 style="display:flex;align-items:center;justify-content:space-between;">
-          <span>🗺 경로 표시 설정</span>
-          <button onclick="resetAll()" style="font-size:0.7em;padding:3px 10px;border-radius:5px;border:1px solid #e94560;background:transparent;color:#e94560;cursor:pointer;font-family:'Malgun Gothic',sans-serif;letter-spacing:0.5px;transition:all 0.2s;" onmouseover="this.style.background='#e94560';this.style.color='#fff'" onmouseout="this.style.background='transparent';this.style.color='#e94560'">초기화</button>
-        </h2>
-
         <div class="mode-switch">
           <button class="mode-btn active" id="modeSpotBtnMobile" onclick="setViewMode('spot')">
             <span class="mode-icon">●</span> 지명
@@ -496,11 +481,18 @@
             <span class="mode-icon">↝</span> 경로
           </button>
         </div>
-        <p class="mode-hint" id="modeHintMobile">전체 67개 지명을 지도에 표시합니다.</p>
 
         <div id="itemTogglesMobile">
+          <div class="route-item" id="commonItemMobile" onclick="toggleItem('common', document.getElementById('tog-common-m'))">
+            <div class="route-color" style="background:#EF5350"></div>
+            <div class="route-info">
+              <div class="route-name">ACTS 지명</div>
+              <div class="route-desc">전체 67개 지명 표시</div>
+            </div>
+            <button class="route-toggle on" id="tog-common-m" onclick="event.stopPropagation()"></button>
+          </div>
           <div class="route-item" onclick="toggleItem('calling', document.getElementById('tog-calling-m'))">
-            <div class="route-color" style="background:#FF6D00"></div>
+            <div class="route-color" style="background:#FF8F00"></div>
             <div class="route-info">
               <div class="route-name">바울의 부르심</div>
               <div class="route-desc">행 9장; 갈 1:15-21</div>
@@ -508,7 +500,7 @@
             <button class="route-toggle" id="tog-calling-m" onclick="event.stopPropagation()"></button>
           </div>
           <div class="route-item" onclick="toggleItem('paul1', document.getElementById('tog-paul1-m'))">
-            <div class="route-color" style="background:#FF3D00"></div>
+            <div class="route-color" style="background:#D32F2F"></div>
             <div class="route-info">
               <div class="route-name">바울 제1차 전도여행</div>
               <div class="route-desc">행 13–14장</div>
@@ -516,7 +508,7 @@
             <button class="route-toggle" id="tog-paul1-m" onclick="event.stopPropagation()"></button>
           </div>
           <div class="route-item" onclick="toggleItem('paul2', document.getElementById('tog-paul2-m'))">
-            <div class="route-color" style="background:#00E5FF"></div>
+            <div class="route-color" style="background:#039BE5"></div>
             <div class="route-info">
               <div class="route-name">바울 제2차 전도여행</div>
               <div class="route-desc">행 15:36–18:22</div>
@@ -524,7 +516,7 @@
             <button class="route-toggle" id="tog-paul2-m" onclick="event.stopPropagation()"></button>
           </div>
           <div class="route-item" onclick="toggleItem('paul3', document.getElementById('tog-paul3-m'))">
-            <div class="route-color" style="background:#00E676"></div>
+            <div class="route-color" style="background:#43A047"></div>
             <div class="route-info">
               <div class="route-name">바울 제3차 전도여행</div>
               <div class="route-desc">행 18:23–21:17</div>
@@ -532,7 +524,7 @@
             <button class="route-toggle" id="tog-paul3-m" onclick="event.stopPropagation()"></button>
           </div>
           <div class="route-item" onclick="toggleItem('paul4', document.getElementById('tog-paul4-m'))">
-            <div class="route-color" style="background:#D500F9"></div>
+            <div class="route-color" style="background:#AB47BC"></div>
             <div class="route-info">
               <div class="route-name">바울 제4차 전도여행</div>
               <div class="route-desc">행 27–28장</div>
@@ -540,7 +532,7 @@
             <button class="route-toggle" id="tog-paul4-m" onclick="event.stopPropagation()"></button>
           </div>
           <div class="route-item" onclick="toggleItem('philip', document.getElementById('tog-philip-m'))">
-            <div class="route-color" style="background:#FFD600"></div>
+            <div class="route-color" style="background:#FFB300"></div>
             <div class="route-info">
               <div class="route-name">빌립의 이동 경로</div>
               <div class="route-desc">행 8장</div>
@@ -548,20 +540,12 @@
             <button class="route-toggle" id="tog-philip-m" onclick="event.stopPropagation()"></button>
           </div>
           <div class="route-item" onclick="toggleItem('peter', document.getElementById('tog-peter-m'))">
-            <div class="route-color" style="background:#FF4081"></div>
+            <div class="route-color" style="background:#EC407A"></div>
             <div class="route-info">
               <div class="route-name">베드로의 이동 경로</div>
               <div class="route-desc">행 9–10장</div>
             </div>
             <button class="route-toggle" id="tog-peter-m" onclick="event.stopPropagation()"></button>
-          </div>
-          <div class="route-item" id="commonItemMobile" onclick="toggleItem('common', document.getElementById('tog-common-m'))">
-            <div class="route-color" style="background:#FF1744"></div>
-            <div class="route-info">
-              <div class="route-name">모든 지명</div>
-              <div class="route-desc">전체 67개 지명 표시</div>
-            </div>
-            <button class="route-toggle on" id="tog-common-m" onclick="event.stopPropagation()"></button>
           </div>
         </div>
       </div>
@@ -574,31 +558,31 @@
         </div>
         <div class="accordion-body" id="companionMBody">
           <div class="info-box">
-            <div style="color:#FF6D00; font-weight:bold; margin-bottom:5px;">⓪ 바울의 부르심 (행 9장; 갈 1:15-21)</div>
+            <div style="color:#FF8F00; font-weight:bold; margin-bottom:5px;">⓪ 바울의 부르심 (행 9장; 갈 1:15-21)</div>
             <div class="companion-item"><span class="companion-name">아나니아</span> — 다메섹에서 바울에게 안수, 세례 (행 9:17-18)</div>
             <div class="companion-item"><span class="companion-name">바나바</span> — 안디옥으로 데려와 1년간 함께 가르침 (행 11:25-26)</div>
           </div>
           <div class="info-box">
-            <div style="color:#FF3D00; font-weight:bold; margin-bottom:5px;">① 제1차 전도여행 (행 13–14장)</div>
+            <div style="color:#D32F2F; font-weight:bold; margin-bottom:5px;">① 제1차 전도여행 (행 13–14장)</div>
             <div class="companion-item"><span class="companion-name">바나바</span> — 전 여정 동행. 구브로 출신 레위인 (행 13:2)</div>
             <div class="companion-item"><span class="companion-name">요한 마가</span> — 안디옥→버가; 버가에서 이탈 (행 13:13)</div>
           </div>
           <div class="info-box">
-            <div style="color:#00E5FF; font-weight:bold; margin-bottom:5px;">② 제2차 전도여행 (행 15:36–18:22)</div>
+            <div style="color:#039BE5; font-weight:bold; margin-bottom:5px;">② 제2차 전도여행 (행 15:36–18:22)</div>
             <div class="companion-item"><span class="companion-name">실라</span> — 전 여정 동행 (행 15:40)</div>
             <div class="companion-item"><span class="companion-name">디모데</span> — 루스드라 합류 (행 16:1)</div>
             <div class="companion-item"><span class="companion-name">누가</span> — 드로아 합류 추정 (행 16:10 "우리")</div>
             <div class="companion-item"><span class="companion-name">아굴라·브리스길라</span> — 고린도→에베소 (행 18:2,18)</div>
           </div>
           <div class="info-box">
-            <div style="color:#00E676; font-weight:bold; margin-bottom:5px;">③ 제3차 전도여행 (행 18:23–21:17)</div>
+            <div style="color:#43A047; font-weight:bold; margin-bottom:5px;">③ 제3차 전도여행 (행 18:23–21:17)</div>
             <div class="companion-item"><span class="companion-name">디모데</span> — 동행 (행 19:22)</div>
             <div class="companion-item"><span class="companion-name">에라스도</span> — 마게도냐까지 (행 19:22)</div>
             <div class="companion-item"><span class="companion-name">소바더·아리스다고·세군도·가이오·두기고·드로비모</span> — 행 20:4</div>
             <div class="companion-item"><span class="companion-name">누가</span> — 빌립보 재합류 (행 20:6 "우리")</div>
           </div>
           <div class="info-box">
-            <div style="color:#D500F9; font-weight:bold; margin-bottom:5px;">④ 제4차 전도여행 /로마압송 (행 27–28장)</div>
+            <div style="color:#AB47BC; font-weight:bold; margin-bottom:5px;">④ 제4차 전도여행 /로마압송 (행 27–28장)</div>
             <div class="companion-item"><span class="companion-name">아리스다고</span> — 데살로니가 출신 (행 27:2)</div>
             <div class="companion-item"><span class="companion-name">누가</span> — 저자 본인 "우리" (행 27:1)</div>
           </div>
@@ -613,12 +597,11 @@
         </div>
         <div class="accordion-body" id="guideMBody">
           <p class="legend-note">
-            • <b style="color:#fff">경로</b> 선택 → 경로 라인 개별 켜기·끄기<br>
-            • <b style="color:#fff">지명</b> 선택 → 지명 마커 그룹 개별 켜기·끄기<br>
-            • 마커 터치 시 지명 설명·성경 구절 팝업<br>
-            • 두 손가락 핀치: 확대/축소 | 드래그: 이동<br><br>
-            📷 사진 참고: bibleland.net 에서 지명 검색
+            • 마커 터치 → 지명 설명·성경 구절 팝업<br>
+            • 핀치: 확대/축소 | 드래그: 이동<br>
+            • 📷 사진: bibleland.net
           </p>
+          <p class="legend-note" style="margin-top:6px; font-size:0.75em; color:#555;">© 2026 Sung Backchel · BIBLELAND™</p>
         </div>
       </div>
 
@@ -664,22 +647,22 @@ const map = L.map('map', { center: [37.5, 28.0], zoom: 5 });
 
 const mapLayers = {
   voyager: L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
-    attribution: '© CARTO · OpenStreetMap', maxZoom: 19, subdomains: 'abcd'
+    attribution: '© 2026 Sung Backchel · BIBLELAND™ | CARTO · OpenStreetMap', maxZoom: 19, subdomains: 'abcd'
   }),
   satellite: L.tileLayer('https://mt{s}.google.com/vt/lyrs=y&x={x}&y={y}&z={z}', {
-    subdomains: '0123', attribution: '© Google', maxZoom: 20
+    subdomains: '0123', attribution: '© 2026 Sung Backchel · BIBLELAND™ | Google', maxZoom: 20
   }),
   street: L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution: '© OpenStreetMap contributors', maxZoom: 18
+    attribution: '© 2026 Sung Backchel · BIBLELAND™ | OpenStreetMap', maxZoom: 18
   }),
   topo: L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
-    attribution: '© OpenTopoMap', maxZoom: 17
+    attribution: '© 2026 Sung Backchel · BIBLELAND™ | OpenTopoMap', maxZoom: 17
   }),
   esri_street: L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}', {
-    attribution: '© Esri · HERE · Garmin · OpenStreetMap', maxZoom: 18
+    attribution: '© 2026 Sung Backchel · BIBLELAND™ | Esri · OpenStreetMap', maxZoom: 18
   }),
   esri_imagery: L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
-    attribution: '© Esri · Maxar · Earthstar', maxZoom: 19
+    attribution: '© 2026 Sung Backchel · BIBLELAND™ | Esri · Maxar', maxZoom: 19
   })
 };
 let currentLayer = 'voyager';
@@ -696,9 +679,9 @@ function switchMapLayer(layerKey) {
 // 지명 데이터
 // ============================================================
 const COLORS = {
-  calling: '#FF6D00', paul1: '#FF3D00', paul2: '#00E5FF', paul3: '#00E676',
-  paul4: '#D500F9', philip: '#FFD600', peter: '#FF4081',
-  neutral: '#B0BEC5', important: '#FF1744'
+  calling: '#FF8F00', paul1: '#D32F2F', paul2: '#039BE5', paul3: '#43A047',
+  paul4: '#AB47BC', philip: '#FFB300', peter: '#EC407A',
+  neutral: '#B0BEC5', important: '#EF5350'
 };
 
 const places = [
@@ -803,8 +786,8 @@ const extraDotMarkers = {
 // 마커 아이콘 생성
 // ============================================================
 function makePlaceIcon(num, kor, color, big) {
-  const fSize = big ? 18 : 15;
-  const nSize = big ? 14 : 12;
+  const fSize = 16;
+  const nSize = 11;
   const label = (typeof num === 'number' && num >= 1 && num <= 30) ? circledNums[num - 1] : num;
   // 원문자가 정확히 좌표 위치에 고정, 지명은 오른쪽에 오프셋
   return L.divIcon({
@@ -817,8 +800,8 @@ function makePlaceIcon(num, kor, color, big) {
 }
 
 function makeDotIcon(kor, color, big) {
-  const dotSize = big ? 14 : 11;
-  const nSize = big ? 13 : 11;
+  const dotSize = 11;
+  const nSize = 11;
   // 점이 좌표 위치에 고정, 지명은 아래에 배치
   return L.divIcon({
     html: `<div class="place-label-wrap dot-mode">
@@ -1060,13 +1043,13 @@ let currentMarkerMode = 'dots';
 // 경로 라인
 // ============================================================
 const routeStyles = {
-  calling: { color: '#FF6D00', weight: 3.5, dashArray: '6,4' },
-  paul1:   { color: '#FF3D00', weight: 3.5, dashArray: null },
-  paul2:   { color: '#00E5FF', weight: 3.5, dashArray: null },
-  paul3:   { color: '#00E676', weight: 3.5, dashArray: null },
-  paul4:   { color: '#D500F9', weight: 3.5, dashArray: null },
-  philip:  { color: '#FFD600', weight: 3.5, dashArray: null },
-  peter:   { color: '#FF4081', weight: 3.5, dashArray: null }
+  calling: { color: '#FF8F00', weight: 3.5, dashArray: '6,4' },
+  paul1:   { color: '#D32F2F', weight: 3.5, dashArray: null },
+  paul2:   { color: '#039BE5', weight: 3.5, dashArray: null },
+  paul3:   { color: '#43A047', weight: 3.5, dashArray: null },
+  paul4:   { color: '#AB47BC', weight: 3.5, dashArray: null },
+  philip:  { color: '#FFB300', weight: 3.5, dashArray: null },
+  peter:   { color: '#EC407A', weight: 3.5, dashArray: null }
 };
 
 // ── 구간별 경유점(waypoints): 바울 시대 항해로·로마 도로 기반 ──
@@ -1390,7 +1373,7 @@ function refreshMarkers() {
     currentMarkerMode = 'numbered';
     spotGroups[activeRoutes[0]].addTo(map);
   } else if (activeRoutes.length === 0) {
-    // 경로 없을 때: common 활성이면 모든 지명 표시
+    // 경로 없을 때: common 활성이면 ACTS 지명 표시
     currentMarkerMode = 'dots';
     if (activeItems.common) { allPlacesGroup.addTo(map); }
   } else {
@@ -1407,8 +1390,6 @@ function refreshMarkers() {
 
 function setViewMode(mode) {
   currentViewMode = mode;
-  const hint = document.getElementById('modeHint');
-  const hintMobile = document.getElementById('modeHintMobile');
   const btnRoute = document.getElementById('modeRouteBtn');
   const btnSpot = document.getElementById('modeSpotBtn');
   const btnRouteMobile = document.getElementById('modeRouteBtnMobile');
@@ -1426,8 +1407,6 @@ function setViewMode(mode) {
   if (mode === 'route') {
     if (commonItem) commonItem.style.display = 'flex';
     if (commonItemMobile) commonItemMobile.style.display = 'flex';
-    if (hint) hint.textContent = '이동 경로를 선으로 표시합니다. 개별 경로를 켜고 끌 수 있습니다.';
-    if (hintMobile) hintMobile.textContent = '이동 경로를 선으로 표시합니다. 개별 경로를 켜고 끌 수 있습니다.';
     if (btnRoute) btnRoute.classList.add('active');
     if (btnSpot) btnSpot.classList.remove('active');
     if (btnRouteMobile) btnRouteMobile.classList.add('active');
@@ -1435,8 +1414,6 @@ function setViewMode(mode) {
   } else {
     if (commonItem) commonItem.style.display = 'flex';
     if (commonItemMobile) commonItemMobile.style.display = 'flex';
-    if (hint) hint.textContent = '전체 67개 지명을 지도에 표시합니다.';
-    if (hintMobile) hintMobile.textContent = '전체 67개 지명을 지도에 표시합니다.';
     if (btnRoute) btnRoute.classList.remove('active');
     if (btnSpot) btnSpot.classList.add('active');
     if (btnRouteMobile) btnRouteMobile.classList.remove('active');
@@ -1453,38 +1430,27 @@ function setViewMode(mode) {
 
 function toggleItem(key, btn) {
   if (activeItems[key]) {
-    // 끄기
+    // 이미 켜져 있으면 끄기
     if (routeLineLayers[key]) { map.removeLayer(routeLineLayers[key]); }
     activeItems[key] = false;
     btn.classList.remove('on');
-    // 동일 키의 데스크톱/모바일 버튼 동기화
     const otherId = btn.id.endsWith('-m') ? btn.id.replace('-m','') : btn.id + '-m';
     const otherBtn = document.getElementById(otherId);
     if (otherBtn) otherBtn.classList.remove('on');
   } else {
-    // 켜기
-    if (key === 'common') {
-      // '모든 지명' 켤 때 → 모든 경로 끄기
-      routeKeys.forEach(rk => {
-        if (activeItems[rk]) {
-          activeItems[rk] = false;
-          if (routeLineLayers[rk]) map.removeLayer(routeLineLayers[rk]);
-          const b = document.getElementById('tog-' + rk);
-          const bm = document.getElementById('tog-' + rk + '-m');
-          if (b) b.classList.remove('on');
-          if (bm) bm.classList.remove('on');
-        }
-      });
-    } else {
-      // 경로 켤 때 → '모든 지명' 끄기
-      if (activeItems.common) {
-        activeItems.common = false;
-        const tc = document.getElementById('tog-common');
-        const tcm = document.getElementById('tog-common-m');
-        if (tc) tc.classList.remove('on');
-        if (tcm) tcm.classList.remove('on');
+    // 켜기 — 먼저 다른 모든 항목 끄기 (라디오 버튼 방식)
+    const allKeys = routeKeys.concat(['common']);
+    allKeys.forEach(k => {
+      if (activeItems[k]) {
+        activeItems[k] = false;
+        if (routeLineLayers[k]) map.removeLayer(routeLineLayers[k]);
+        const b = document.getElementById('tog-' + k);
+        const bm = document.getElementById('tog-' + k + '-m');
+        if (b) b.classList.remove('on');
+        if (bm) bm.classList.remove('on');
       }
-    }
+    });
+    // 선택한 항목 켜기
     if (currentViewMode === 'route' && routeLineLayers[key]) {
       routeLineLayers[key].addTo(map);
     }
@@ -1509,7 +1475,7 @@ function resetAll() {
     if (btn) btn.classList.remove('on');
     if (btnMobile) btnMobile.classList.remove('on');
   });
-  // 초기화 시 '모든 지명' 활성화
+  // 초기화 시 'ACTS 지명' 활성화
   activeItems.common = true;
   allPlacesGroup.addTo(map);
   const tc = document.getElementById('tog-common');
@@ -1616,7 +1582,7 @@ if (isMobileDevice) {
 }
 
 // ============================================================
-// 초기화: 경로 모드로 시작, '모든 지명' 활성화
+// 초기화: 경로 모드로 시작, 'ACTS 지명' 활성화
 // ============================================================
 map.fitBounds([[28.0, 10.0], [42.0, 45.0]]);
 activeItems.common = true;
